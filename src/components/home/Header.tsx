@@ -4,6 +4,8 @@ import Link from 'next/link';
 import React from 'react';
 import type { Database } from '@lib/supabase/schema';
 import Image from 'next/image';
+import UserHeaderMenu from './UserHeaderMenu';
+import { ArrowDown } from '@assets/SvgComponents';
 
 export const revalidate = 0;
 
@@ -41,18 +43,23 @@ export default async function Header() {
     authPanel = (
       <div className='flex items-center gap-4'>
         {currentUser && currentUser?.length > 0 && (
-          <div className='flex items-center gap-2'>
-            <div>{currentUser[0].name}</div>
-            <span className='rounded-full transition-color duration-150 text-black font-semibold'>
-              <Image
-                src={currentUser[0].avatar_url}
-                className='rounded-full shadow-dp04'
-                width={40}
-                height={40}
-                alt='Avatar'
-              />
-            </span>
-          </div>
+          <>
+            <UserHeaderMenu>
+              <div className='flex items-center gap-2'>
+                <div>{currentUser[0].name}</div>
+                <span className='rounded-full transition-color duration-150 text-black font-semibold'>
+                  <Image
+                    src={currentUser[0].avatar_url}
+                    className='rounded-full shadow-dp04'
+                    width={40}
+                    height={40}
+                    alt='Avatar'
+                  />
+                </span>
+                <ArrowDown className='w-2 h-2 fill-gray-100' />
+              </div>
+            </UserHeaderMenu>
+          </>
         )}
       </div>
     );
