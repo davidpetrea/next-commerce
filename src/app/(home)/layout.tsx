@@ -1,15 +1,14 @@
 import { cookies } from 'next/headers';
+import Footer from '@components/home/Footer';
 import Header from '@components/home/Header';
 import { Database } from '@lib/supabase/schema';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import Footer from '@components/home/Footer';
 
 export const metadata = {
-  title: 'Next Core ',
-  description: 'The Next Core chatting experience.',
+  title: 'Next Commerce',
 };
 
-export default async function RootLayout({
+export default async function GameLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -20,9 +19,28 @@ export default async function RootLayout({
   return (
     <div className='flex flex-col min-h-screen'>
       <main className='flex grow'>
-        <div className='flex flex-col flex-grow shrink-0'>
-          {/* @ts-expect-error Async Server Component */}
+        <div className='flex flex-col flex-grow'>
           <Header />
+          {/* Title container */}
+          <div className='flex flex-col items-center bg-gradient-to-b from-seablue-fade to-neutral-900 py-28'>
+            <h2 className='text-center text-orange font-semibold mb-4 max-w-[80%]'>
+              <p className='inline-block bg-gradient-to-r from-seablue to-green bg-clip-text text-transparent'>
+                GAMES ARE TOUGH, BUT OUR PROS ARE TOUGHER
+              </p>
+            </h2>
+            <h1 className='text-2xl md:text-6xl max-w-[80%] text-center font-bold'>
+              Obtain the{' '}
+              <span className='bg-gradient-to-r from-seablue to-green bg-clip-text text-transparent'>
+                items, currency, and coaching
+              </span>{' '}
+              necessary to take your game to the next level
+            </h1>
+            <p className='text-gray-300 mt-8'>
+              <span className='font-semibold'>Excellent 5.0</span> out of 5.0 on{' '}
+              <span className='text-white'>Trustpilot</span>
+            </p>
+          </div>
+
           <div className='bg-neutral-900 grow'>{children}</div>
         </div>
       </main>

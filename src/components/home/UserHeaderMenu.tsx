@@ -6,7 +6,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@lib/supabase/schema';
 import { useRouter } from 'next/navigation';
 
-const UserHeaderMenu = ({ children }: any) => {
+const UserHeaderMenu = ({ children }: { children: JSX.Element }) => {
   const supabase = createClientComponentClient<Database>();
   const router = useRouter();
 

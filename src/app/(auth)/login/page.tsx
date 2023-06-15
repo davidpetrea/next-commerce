@@ -22,7 +22,9 @@ export default async function Login() {
 
   return (
     <main className='min-h-screen flex flex-col gap-4 justify-center items-center p-4 md:p-24'>
-      <h2 className='text-3xl font-bold text-center'>Log in to Next Commerce</h2>
+      <h2 className='text-3xl font-bold text-center'>
+        Log in to Next Commerce
+      </h2>
       {/* Auth providers */}
       <div className='flex flex-col my-8 items-center gap-2 w-full max-w-[24rem]'>
         <GoogleLoginButton />

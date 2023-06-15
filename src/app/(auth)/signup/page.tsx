@@ -4,6 +4,7 @@ import { Database } from '@lib/supabase/schema';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { redirect } from 'next/navigation';
 import GoogleLoginButton from '@components/login/GoogleLoginButton';
+import Link from 'next/link';
 
 export const metadata = {
   title: 'Sign up | Next Commerce',
@@ -21,7 +22,9 @@ export default async function Register() {
 
   return (
     <main className='min-h-screen flex flex-col gap-4 justify-center items-center p-4 md:p-24'>
-      <h1 className='text-3xl mb-4'>Next Commerce</h1>
+      <h1 className='text-3xl mb-4'>
+        <Link href='/'>Next Commerce</Link>
+      </h1>
       <h2 className='text-3xl mb-8 font-bold text-center'>
         Sign up for free today.
       </h2>
