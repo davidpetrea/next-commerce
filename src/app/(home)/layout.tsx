@@ -16,14 +16,14 @@ export default async function GameLayout({
   const supabase = createServerComponentClient<Database>({ cookies });
 
   const { data } = await supabase.auth.getSession();
-  
+
   return (
     <div className='flex flex-col min-h-screen'>
       <main className='flex grow'>
         <div className='flex flex-col flex-grow'>
           <Header />
           {/* Title container */}
-          <div className='flex flex-col items-center bg-gradient-to-b from-seablue-fade to-neutral-900 py-28'>
+          <div className='flex flex-col items-center bg-gradient-to-b from-seablue-fade to-neutral-900 py-16 md:py-28'>
             <h2 className='text-center text-orange font-semibold mb-4 max-w-[80%]'>
               <p className='inline-block bg-gradient-to-r from-seablue to-green bg-clip-text text-transparent'>
                 GAMES ARE TOUGH, BUT OUR PROS ARE TOUGHER
@@ -42,7 +42,7 @@ export default async function GameLayout({
             </p>
           </div>
 
-          <div className='bg-neutral-900 grow'>{children}</div>
+          <div className='bg-neutral-900 grow flex justify-center'>{children}</div>
         </div>
       </main>
       {!data.session && <Footer />}

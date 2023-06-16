@@ -19,17 +19,19 @@ export default async function GameInfo({ params }: any) {
   const [currentGame] = games.filter((game) => game.path === params.game);
 
   return (
-    <div className='p-4 lg:p-8 flex flex-col justify-center md:flex-row gap-8 w-[1280px] mx-auto'>
-      <div className='md:hidden'>Game mobile menu</div>
-      <div className='hidden md:inline-block basis-[16rem]'>
+    <div className='flex flex-col justify-center md:flex-row gap-8 w-full max-w-7xl'>
+      <div className='md:hidden p-4 lg:p-8'>Game mobile menu</div>
+      {/* Menu container */}
+      <div className='hidden md:inline-block w-[16rem] p-4 shrink-0'>
         <GamesMenu games={games} />
       </div>
-      <div className='grow'>
+      {/* Products container */}
+      <div className='flex flex-col border border-gray-100 p-4 mb-12 w-full md:w-[90%]'>
         <Link href={`/games/${currentGame.path}`}>
           <span className='text-2xl font-bold'>{currentGame.name} Offers</span>
         </Link>
-      
-        <ProductsContainer game={currentGame}/>
+
+        <ProductsContainer game={currentGame} />
       </div>
     </div>
   );

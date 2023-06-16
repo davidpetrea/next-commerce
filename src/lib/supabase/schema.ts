@@ -34,62 +34,62 @@ export interface Database {
         Row: {
           created_at: string | null;
           id: string;
-          product_id: string;
           quantity: number | null;
           user_id: string | null;
         };
         Insert: {
           created_at?: string | null;
           id: string;
-          product_id: string;
           quantity?: number | null;
           user_id?: string | null;
         };
         Update: {
           created_at?: string | null;
           id?: string;
-          product_id?: string;
           quantity?: number | null;
           user_id?: string | null;
         };
-        Relationships: [
-          {
-            foreignKeyName: 'orders_product_id_fkey';
-            columns: ['product_id'];
-            referencedRelation: 'products';
-            referencedColumns: ['id'];
-          }
-        ];
+        Relationships: [];
       };
       products: {
         Row: {
           added_at: string;
-          category: string;
           details: string;
+          game_id: string;
           id: string;
           name: string;
           price: number;
-          updated_at: string | null;
+          tags: string[];
+          updated_at: string;
         };
         Insert: {
           added_at?: string;
-          category?: string;
           details?: string;
-          id: string;
-          name?: string;
-          price?: number;
-          updated_at?: string | null;
-        };
-        Update: {
-          added_at?: string;
-          category?: string;
-          details?: string;
+          game_id: string;
           id?: string;
           name?: string;
           price?: number;
-          updated_at?: string | null;
+          tags?: string[];
+          updated_at?: string;
         };
-        Relationships: [];
+        Update: {
+          added_at?: string;
+          details?: string;
+          game_id?: string;
+          id?: string;
+          name?: string;
+          price?: number;
+          tags?: string[];
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'products_game_id_fkey';
+            columns: ['game_id'];
+            referencedRelation: 'games';
+            referencedColumns: ['id'];
+          }
+        ];
       };
       users: {
         Row: {
