@@ -23,7 +23,7 @@ export default async function GameLayout({
         <div className='flex flex-col flex-grow'>
           <Header />
           {/* Title container */}
-          <div className='flex flex-col items-center bg-gradient-to-b from-seablue-fade to-neutral-900 py-16 md:py-28'>
+          <div className='flex flex-col items-center bg-gradient-to-b from-seablue-fade to-neutral-900 py-8 md:py-28 relative'>
             <h2 className='text-center text-orange font-semibold mb-4 max-w-[80%]'>
               <p className='inline-block bg-gradient-to-r from-seablue to-green bg-clip-text text-transparent'>
                 GAMES ARE TOUGH, BUT OUR PROS ARE TOUGHER
@@ -42,7 +42,9 @@ export default async function GameLayout({
             </p>
           </div>
 
-          <div className='bg-neutral-900 grow flex justify-center'>{children}</div>
+          <div className='bg-neutral-900 grow flex justify-center'>
+            {children}
+          </div>
         </div>
       </main>
       {!data.session && <Footer />}

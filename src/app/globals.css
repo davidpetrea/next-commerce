@@ -25,3 +25,12 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.product-card:hover {
+  background-size: 110%;
+}
+
+.product-card {
+  background-size: 100%;
+  transition: all 0.3s ease 0s;
+}

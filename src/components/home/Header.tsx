@@ -19,14 +19,14 @@ export default async function Header() {
   if (!data.session) {
     authPanel = (
       <div className='flex gap-4 items-center'>
-        <Link href='signup '>
-          <button className='text-gray-300 hover:text-gray-200 transition-all hover:scale-105'>
+        <Link href='signup'>
+          <button className='text-gray-300 text-sm md:text-base whitespace-nowrap hover:text-gray-200 transition-all hover:scale-105'>
             Sign up
           </button>
         </Link>
         <Link href='login'>
           <button className='transition-all duration-150 hover:scale-105 group'>
-            <span className='bg-gray-300 group-hover:bg-gray-100 px-8 py-2 rounded-full transition-color duration-150 text-black font-semibold'>
+            <span className='bg-gray-300 text-sm md:text-base group-hover:bg-gray-100 px-8 py-2 rounded-full transition-color duration-150 text-black font-semibold'>
               Log in
             </span>
           </button>
@@ -69,10 +69,10 @@ export default async function Header() {
     <header
       className={`bg-neutral-800 px-8 ${
         data.session ? 'py-3' : 'py-4'
-      } flex justify-between items-center gap-4 sticky top-0`}
+      } flex justify-between items-center gap-4 sticky top-0 z-10`}
     >
       <Link href='/'>
-        <span className='font-bold'>Next Commerce</span>
+        <span className='font-bold'>Next C.</span>
       </Link>
       {authPanel}
     </header>

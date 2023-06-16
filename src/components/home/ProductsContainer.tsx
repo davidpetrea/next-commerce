@@ -1,6 +1,7 @@
 'use client';
 import { Game } from '@lib/supabase';
 import React, { useState } from 'react';
+import Gold from 'public/images/Gold.webp';
 
 const ProductsContainer = ({ game }: { game: Game }) => {
   const [selectedTag, setSelectedTag] = useState('all');
@@ -37,14 +38,28 @@ const ProductsContainer = ({ game }: { game: Game }) => {
           </button>
         ))}
       </div>
-      <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 mt-4 max-w-full'>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4 max-w-full'>
         {filteredProducts.map((product) => (
-          <div
+          <a
             key={product.id}
-            className='p-4 bg-blue-950 rounded-md border border-gray-300'
+            href={product.name}
+            className='overflow-hidden rounded-md h-[300px] relative product-card-container'
           >
-            {product.name}
-          </div>
+            <div
+              className='flex p-4 rounded-md border border-gray-700 shadow-dp04 product-card'
+              style={{
+                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.1),rgba(30, 34, 66, 0.8), rgba(30, 34, 66, 0.99)), url(${Gold.src}) center top no-repeat`,
+                width: '100%',
+                height: '100%',
+              }}
+            >
+              <div className='flex flex-col justify-end'>
+                <h4 className='font-lg font-semibold'>{product.name}</h4>
+                <div className='text-gray-300 text-sm'>{product.details}</div>
+                <div className='font-bold mt-4'>From ${product.price}</div>
+              </div>
+            </div>
+          </a>
         ))}
       </div>
     </>

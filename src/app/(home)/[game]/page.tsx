@@ -1,4 +1,5 @@
 import GamesMenu from '@components/home/GamesMenu';
+import MobileGamesMenu from '@components/home/MobileGamesMenu';
 import ProductsContainer from '@components/home/ProductsContainer';
 import { getGames } from '@lib/supabase';
 import Link from 'next/link';
@@ -19,14 +20,16 @@ export default async function GameInfo({ params }: any) {
   const [currentGame] = games.filter((game) => game.path === params.game);
 
   return (
-    <div className='flex flex-col justify-center md:flex-row gap-8 w-full max-w-7xl'>
-      <div className='md:hidden p-4 lg:p-8'>Game mobile menu</div>
+    <div className='flex flex-col md:justify-center md:flex-row gap-8 w-full max-w-7xl'>
+      <div className='md:hidden p-4 lg:p-8'>
+        <MobileGamesMenu games={games} currentGame={currentGame} />
+      </div>
       {/* Menu container */}
       <div className='hidden md:inline-block w-[16rem] p-4 shrink-0'>
         <GamesMenu games={games} />
       </div>
       {/* Products container */}
-      <div className='flex flex-col border border-gray-100 p-4 mb-12 w-full md:w-[90%]'>
+      <div className='flex flex-col p-4 mb-12 w-full min-h-[600px]'>
         <Link href={`/games/${currentGame.path}`}>
           <span className='text-2xl font-bold'>{currentGame.name} Offers</span>
         </Link>
