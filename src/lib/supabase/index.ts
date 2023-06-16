@@ -22,8 +22,17 @@ export async function getUserById(userId: string) {
   return { data, error };
 }
 
+export async function getGames() {
+  const { data, error } = await supabase.from('games').select('*');
+  return { data, error };
+}
+
 type UsersResponse = Awaited<ReturnType<typeof getUserById>>;
 export type UsersResponseSuccess = UsersResponse['data'];
 export type UsersResponseError = UsersResponse['error'];
 
 export type User = ElementType<UsersResponseSuccess>;
+
+type GamesResponse = Awaited<ReturnType<typeof getGames>>;
+export type GamesResponseSuccess = GamesResponse['data'];
+export type Game = ElementType<GamesResponseSuccess>;

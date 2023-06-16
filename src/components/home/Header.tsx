@@ -71,7 +71,9 @@ export default async function Header() {
         data.session ? 'py-3' : 'py-4'
       } flex justify-between items-center gap-4 sticky top-0`}
     >
-      <div>Home</div>
+      <Link href='/'>
+        <span className='font-bold'>Next Commerce</span>
+      </Link>
       {authPanel}
     </header>
   );

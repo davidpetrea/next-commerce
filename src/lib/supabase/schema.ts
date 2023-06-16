@@ -9,6 +9,27 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      games: {
+        Row: {
+          id: string;
+          name: string;
+          path: string;
+          tags: string[];
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          path: string;
+          tags: string[];
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          path?: string;
+          tags?: string[];
+        };
+        Relationships: [];
+      };
       orders: {
         Row: {
           created_at: string | null;
@@ -31,6 +52,14 @@ export interface Database {
           quantity?: number | null;
           user_id?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: 'orders_product_id_fkey';
+            columns: ['product_id'];
+            referencedRelation: 'products';
+            referencedColumns: ['id'];
+          }
+        ];
       };
       products: {
         Row: {
@@ -60,29 +89,35 @@ export interface Database {
           price?: number;
           updated_at?: string | null;
         };
+        Relationships: [];
       };
       users: {
         Row: {
           avatar_url: string;
-          created_at: string | null;
           email: string;
           id: string;
           name: string;
         };
         Insert: {
           avatar_url?: string;
-          created_at?: string | null;
           email: string;
           id: string;
           name: string;
         };
         Update: {
           avatar_url?: string;
-          created_at?: string | null;
           email?: string;
           id?: string;
           name?: string;
         };
+        Relationships: [
+          {
+            foreignKeyName: 'users_id_fkey';
+            columns: ['id'];
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          }
+        ];
       };
     };
     Views: {
