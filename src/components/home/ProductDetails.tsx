@@ -1,9 +1,3 @@
-import { ArrowDown } from '@assets/SvgComponents';
-
-const ListItemArrow = () => {
-  return <ArrowDown className='fill-purple-700 w-3 h-3 rotate-[270deg]' />;
-};
-
 const ListItemDiamond = () => {
   return <div className='w-1.5 h-1.5 bg-purple-700 rotate-45 rounded-[2px]' />;
 };

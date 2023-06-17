@@ -20,7 +20,7 @@ export default async function GameInfo({ params }: any) {
   const [currentGame] = games.filter((game) => game.path === params.game);
 
   return (
-    <div className='flex flex-col md:justify-center md:flex-row gap-8 w-full max-w-7xl'>
+    <div className='flex flex-col md:justify-center md:flex-row gap-8 w-full max-w-[1408px]'>
       <div className='md:hidden p-4 lg:p-8'>
         <MobileGamesMenu games={games} currentGame={currentGame} />
       </div>

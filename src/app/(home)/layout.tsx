@@ -8,7 +8,7 @@ export const metadata = {
   title: 'Next Commerce',
 };
 
-export default async function GameLayout({
+export default async function HomeLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -24,12 +24,12 @@ export default async function GameLayout({
           <Header />
           {/* Title container */}
           <div className='flex flex-col items-center bg-gradient-to-b from-seablue-fade to-neutral-900 py-8 md:py-28 relative'>
-            <h2 className='text-center text-orange font-semibold mb-4 max-w-[80%]'>
+            <h2 className='text-center text-orange font-semibold mb-4 px-4'>
               <p className='inline-block bg-gradient-to-r from-seablue to-green bg-clip-text text-transparent'>
                 GAMES ARE TOUGH, BUT OUR PROS ARE TOUGHER
               </p>
             </h2>
-            <h1 className='text-2xl md:text-6xl max-w-[80%] text-center font-bold'>
+            <h1 className='text-2xl md:text-6xl max-w-7xl text-center font-bold px-4'>
               Obtain the{' '}
               <span className='bg-gradient-to-r from-seablue to-green bg-clip-text text-transparent'>
                 items, currency, and coaching
