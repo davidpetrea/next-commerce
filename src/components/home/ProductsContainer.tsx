@@ -1,7 +1,7 @@
 'use client';
 import { Game } from '@lib/supabase';
+import { productDetails } from './ProductDetails';
 import React, { useState } from 'react';
-import Gold from 'public/images/Gold.webp';
 
 const ProductsContainer = ({ game }: { game: Game }) => {
   const [selectedTag, setSelectedTag] = useState('all');
@@ -42,21 +42,46 @@ const ProductsContainer = ({ game }: { game: Game }) => {
         {filteredProducts.map((product) => (
           <a
             key={product.id}
-            href={product.name}
-            className='overflow-hidden rounded-md h-[300px] relative product-card-container'
+            href={`/games/${game.path}/${product.path}`}
+            className='overflow-hidden rounded-md h-[300px]'
           >
             <div
               className='flex p-4 rounded-md border border-gray-700 shadow-dp04 product-card'
               style={{
-                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.1),rgba(30, 34, 66, 0.8), rgba(30, 34, 66, 0.99)), url(${Gold.src}) center top no-repeat`,
+                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.1), rgba(30, 34, 66, 0.8), rgba(30, 34, 66, 0.99)), url('${product.image_url}')`,
                 width: '100%',
                 height: '100%',
               }}
             >
               <div className='flex flex-col justify-end'>
                 <h4 className='font-lg font-semibold'>{product.name}</h4>
-                <div className='text-gray-300 text-sm'>{product.details}</div>
-                <div className='font-bold mt-4'>From ${product.price}</div>
+                <div className='text-gray-300 text-[14px] leading-[22px]'>
+                  {product.details}
+                </div>
+                {productDetails[game.path][product.path] &&
+                  productDetails[game.path][product.path]}
+                {product.sale_price ? (
+                  <>
+                    <div className='mt-4 bg-green text-sm text-black font-semibold p-1 px-3 rounded-lg max-w-fit'>
+                      Save{' '}
+                      {Math.round(
+                        (1 - product.sale_price / product.price) * 100
+                      )}
+                      %
+                    </div>
+                    <div className='font-bold mt-1 text-sm'>
+                      From{' '}
+                      <span className='text-green text-lg'>
+                        ${product.sale_price}
+                      </span>{' '}
+                      <span className='line-through text-sm text-gray-400 font-semibold'>
+                        ${product.price}
+                      </span>
+                    </div>
+                  </>
+                ) : (
+                  <div className='font-bold mt-4'>From ${product.price}</div>
+                )}
               </div>
             </div>
           </a>

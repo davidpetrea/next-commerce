@@ -23,7 +23,11 @@ export async function getUserById(userId: string) {
 }
 
 export async function getGames() {
-  const { data, error } = await supabase.from('games').select('name, path, tags, products (id, name, details, price, tags)');
+  const { data, error } = await supabase
+    .from('games')
+    .select(
+      'name, path, tags, products (id, name, details, price, tags, image_url,path, sale_price)'
+    );
   return { data, error };
 }
 

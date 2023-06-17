@@ -57,8 +57,11 @@ export interface Database {
           details: string;
           game_id: string;
           id: string;
+          image_url: string | null;
           name: string;
+          path: string;
           price: number;
+          sale_price: number | null;
           tags: string[];
           updated_at: string;
         };
@@ -67,8 +70,11 @@ export interface Database {
           details?: string;
           game_id: string;
           id?: string;
+          image_url?: string | null;
           name?: string;
+          path: string;
           price?: number;
+          sale_price?: number | null;
           tags?: string[];
           updated_at?: string;
         };
@@ -77,8 +83,11 @@ export interface Database {
           details?: string;
           game_id?: string;
           id?: string;
+          image_url?: string | null;
           name?: string;
+          path?: string;
           price?: number;
+          sale_price?: number | null;
           tags?: string[];
           updated_at?: string;
         };

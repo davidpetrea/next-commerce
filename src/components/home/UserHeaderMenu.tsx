@@ -13,6 +13,7 @@ const UserHeaderMenu = ({ children }: { children: JSX.Element }) => {
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     router.push('/login');
+    router.refresh();
   };
 
   return (

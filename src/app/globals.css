@@ -31,6 +31,8 @@ body {
 }
 
 .product-card {
-  background-size: 100%;
+  background-size: 100%, 100%;
+  background-position: center top;
+  background-repeat: no-repeat;
   transition: all 0.3s ease 0s;
 }
