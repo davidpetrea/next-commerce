@@ -11,9 +11,11 @@ import React from 'react';
 
 export const revalidate = 0;
 
-export default async function GamePage({ params }: any) {
-  const { data: games } = await getGames();
+export const dynamic = 'force-dynamic';
 
+export default async function GamePage({ params, searchParams }: any) {
+  const { data: games } = await getGames();
+  console.log(searchParams);
   if (!games) {
     return <div>No games found.</div>;
   }
@@ -30,6 +32,16 @@ export default async function GamePage({ params }: any) {
       )
     : currentGame.products;
 
+  //Valid routes are game tags and product paths combined
+  const validSubroutes = [
+    ...currentGame.products.map((product) => product.path),
+    ...currentGame.tags,
+  ];
+
+  if (currentTag) {
+    if (!validSubroutes.includes(currentTag)) notFound();
+  }
+
   return (
     <div className='flex w-full'>
       {/* Tag/Category menu container */}
@@ -39,16 +51,19 @@ export default async function GamePage({ params }: any) {
 
       {/* Products container */}
       <div className='flex flex-col w-full relative bg-[#191f3d]'>
-        <div className='absolute'>
-          <Image
-            src={currentGame.bg_img_url ?? ''}
-            alt='dragon'
-            width='0'
-            height='0'
-            sizes='100vw'
-            className='w-full h-auto'
-          />
-        </div>
+        {currentGame.bg_img_url && (
+          <div className='absolute w-full'>
+            <Image
+              src={currentGame.bg_img_url}
+              alt='background'
+              width='0'
+              height='0'
+              sizes='100vw'
+              className='w-full h-auto'
+            />
+          </div>
+        )}
+
         {/* Content */}
         <div className='z-[1] flex flex-col p-4 lg:p-16 justify-center w-full max-w-[1250px] mx-auto'>
           {/* Navigation tracker */}
@@ -79,7 +94,10 @@ export default async function GamePage({ params }: any) {
           </div>
           {pageInfo?.title && pageInfo.title}
           {currentTag === 'gold' ? (
-            <GoldOffersContainer game={currentGame} />
+            <GoldOffersContainer
+              game={currentGame}
+              searchParams={searchParams}
+            />
           ) : (
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4 max-w-full'>
               {products.map((product) => (

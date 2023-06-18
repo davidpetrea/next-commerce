@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { Database } from './schema';
 
-type ElementType<T> = T extends (infer U)[] ? U : never;
+export type ElementType<T> = T extends (infer U)[] ? U : never;
 
 export const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -38,10 +38,11 @@ export async function getGoldOffers(
 ) {
   const { data, error } = await supabase
     .from('gold_offers')
-    .select('*')
+    .select('*, user:users(id,name,avatar_url)')
     .eq('game_id', gameId)
     .eq('region', region)
-    .eq('faction', faction);
+    .eq('faction', faction)
+   
 
   return { data, error };
 }
@@ -58,4 +59,6 @@ export type Game = ElementType<GamesResponseSuccess>;
 
 type GoldOffersResponse = Awaited<ReturnType<typeof getGoldOffers>>;
 export type GoldOffersResponseSuccess = GoldOffersResponse['data'];
+
 export type Offer = ElementType<GoldOffersResponseSuccess>;
+

@@ -28,7 +28,7 @@ export const gamesDetails: {
           <h1 className='font-bold self-start text-3xl lg:text-6xl'>
             WoW Gold
           </h1>
-          <div>
+          <div className='text-[#b8bcff] font-semibold'>
             WoW Gold in Dragonflight is still the most important currency, which
             provides you with a lot of opportunities. For Gold, you can buy
             mounts, pets, transmog items, and, what is more important,
