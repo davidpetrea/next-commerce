@@ -36,14 +36,14 @@ export async function getGoldOffers(
   region: string,
   faction: string
 ) {
-  const { data, errors } = await supabase
+  const { data, error } = await supabase
     .from('gold_offers')
     .select('*')
     .eq('game_id', gameId)
     .eq('region', region)
     .eq('faction', faction);
 
-  return { data, errors };
+  return { data, error };
 }
 
 type UsersResponse = Awaited<ReturnType<typeof getUserById>>;
