@@ -4,19 +4,32 @@ import Image from 'next/image';
 import React from 'react';
 import WowGoldFilters from './WowGoldFilters';
 import Link from 'next/link';
+import Pagination from '@components/common/Pagination';
+
+const PAGE_SIZE = 3;
+
+const getPagination = (page: number = 1, size: number) => {
+  const limit = size ? +size : 3;
+  const from = page === 1 ? 0 : page * limit - limit;
+  const to = page ? from + size - 1 : size - 1;
+  return { from, to };
+};
 
 const getGoldOffers = async ({
   gameId,
   region,
   faction,
+  page,
 }: {
   gameId: string;
   region?: string;
   faction?: string;
+  page?: number;
 }) => {
+  const { from, to } = getPagination(page, PAGE_SIZE);
   let query = supabase
     .from('gold_offers')
-    .select('*, user:users(id,name,avatar_url)')
+    .select('*, user:users(id,name,avatar_url)', { count: 'exact' })
     .eq('game_id', gameId);
 
   if (region) {
@@ -25,9 +38,9 @@ const getGoldOffers = async ({
   if (faction) {
     query = query.eq('faction', faction);
   }
-  const { data, error } = await query;
+  const { data, count, error } = await query.range(from, to);
 
-  return { data, error };
+  return { data, count, error };
 };
 
 export default async function GoldOffersContainer({
@@ -39,6 +52,7 @@ export default async function GoldOffersContainer({
 }) {
   const factionSearch = searchParams?.faction ?? '';
   const regionSearch = searchParams?.region ?? '';
+  const pageSearch = searchParams?.page ?? '';
 
   const faction = Array.isArray(factionSearch)
     ? factionSearch[0]
@@ -46,10 +60,17 @@ export default async function GoldOffersContainer({
 
   const region = Array.isArray(regionSearch) ? regionSearch[0] : regionSearch;
 
-  const { data: offers, error } = await getGoldOffers({
+  const page = Array.isArray(pageSearch) ? +pageSearch[0] : +pageSearch;
+
+  const {
+    data: offers,
+    count,
+    error,
+  } = await getGoldOffers({
     gameId: game.id,
     faction,
     region,
+    page,
   });
 
   if (error) {
@@ -61,13 +82,21 @@ export default async function GoldOffersContainer({
       <div>
         <div className='p-4' />
         <WowGoldFilters region={region} faction={faction} />
+        {/* Offers container */}
         <div className='flex flex-col gap-2 my-4'>
           {offers.map((offer) => (
             <OfferItem key={offer.id} offer={offer} game={game} />
           ))}
         </div>
-        {/* Offers container */}
-        <div></div>
+        {/* Pagination */}
+        {count && count > PAGE_SIZE && (
+          <div className='my-4'>
+            <Pagination
+              count={Math.ceil(count / PAGE_SIZE)}
+              page={page === 0 ? 1 : page}
+            />
+          </div>
+        )}
       </div>
     );
   }
@@ -78,7 +107,7 @@ const OfferItem = ({ offer, game }: { offer: Offer; game: Game }) => {
     <div className='bg-slate-50 rounded-md p-4 flex flex-col md:flex-row items-start md:items-center gap-2 text-black shadow-dp04'>
       {/* Left container */}
       <div className='flex flex-col gap-2 flex-1'>
-        <div className='font-semibold text-black'>
+        <div className='font-bold text-black'>
           <span className='capitalize'>{offer.server}</span> -{' '}
           <span className='uppercase'>{offer.region}</span> - {offer.stock} gold
           in stock
@@ -107,7 +136,7 @@ const OfferItem = ({ offer, game }: { offer: Offer; game: Game }) => {
               alt='avatar'
               width={56}
               height={56}
-              className='rounded-full'
+              className='rounded-full shadow-dp02'
             />
             <div className='flex flex-col gap-1'>
               <div className='text-sm font-bold'>{offer.user?.name}</div>
