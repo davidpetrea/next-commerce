@@ -26,9 +26,24 @@ export async function getGames() {
   const { data, error } = await supabase
     .from('games')
     .select(
-      'name, path, tags, products (id, name, details, price, tags, image_url,path, sale_price)'
+      'id, name, path, tags, bg_img_url, products (id, name, details, price, tags, image_url,path, sale_price)'
     );
   return { data, error };
+}
+
+export async function getGoldOffers(
+  gameId: string,
+  region: string,
+  faction: string
+) {
+  const { data, errors } = await supabase
+    .from('gold_offers')
+    .select('*')
+    .eq('game_id', gameId)
+    .eq('region', region)
+    .eq('faction', faction);
+
+  return { data, errors };
 }
 
 type UsersResponse = Awaited<ReturnType<typeof getUserById>>;
@@ -40,3 +55,7 @@ export type User = ElementType<UsersResponseSuccess>;
 type GamesResponse = Awaited<ReturnType<typeof getGames>>;
 export type GamesResponseSuccess = GamesResponse['data'];
 export type Game = ElementType<GamesResponseSuccess>;
+
+type GoldOffersResponse = Awaited<ReturnType<typeof getGoldOffers>>;
+export type GoldOffersResponseSuccess = GoldOffersResponse['data'];
+export type Offer = ElementType<GoldOffersResponseSuccess>;

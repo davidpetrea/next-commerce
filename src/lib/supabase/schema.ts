@@ -11,24 +11,82 @@ export interface Database {
     Tables: {
       games: {
         Row: {
+          bg_img_url: string | null;
           id: string;
           name: string;
           path: string;
           tags: string[];
         };
         Insert: {
+          bg_img_url?: string | null;
           id?: string;
           name: string;
           path: string;
           tags: string[];
         };
         Update: {
+          bg_img_url?: string | null;
           id?: string;
           name?: string;
           path?: string;
           tags?: string[];
         };
         Relationships: [];
+      };
+      gold_offers: {
+        Row: {
+          created_at: string | null;
+          faction: string;
+          game_id: string;
+          id: number;
+          minimum_amount: number | null;
+          price: number;
+          region: string;
+          server: string;
+          stock: number;
+          unit: number | null;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string | null;
+          faction: string;
+          game_id: string;
+          id?: number;
+          minimum_amount?: number | null;
+          price: number;
+          region: string;
+          server: string;
+          stock: number;
+          unit?: number | null;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string | null;
+          faction?: string;
+          game_id?: string;
+          id?: number;
+          minimum_amount?: number | null;
+          price?: number;
+          region?: string;
+          server?: string;
+          stock?: number;
+          unit?: number | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'gold_offers_game_id_fkey';
+            columns: ['game_id'];
+            referencedRelation: 'games';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'gold_offers_user_id_fkey';
+            columns: ['user_id'];
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          }
+        ];
       };
       orders: {
         Row: {

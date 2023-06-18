@@ -1,5 +1,7 @@
 const ListItemDiamond = () => {
-  return <div className='w-1.5 h-1.5 bg-purple-700 rotate-45 rounded-[2px]' />;
+  return (
+    <div className='w-1.5 h-1.5 bg-purple-700 rotate-45 rounded-[2px] shrink-0' />
+  );
 };
 
 export const productDetails: { [key: string]: { [key: string]: JSX.Element } } =

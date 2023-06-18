@@ -1,6 +1,8 @@
 import { ArrowDown } from '@assets/SvgComponents';
 import CategoryMenu from '@components/games/CategoryMenu';
 import { gamesDetails } from '@components/games/GameDetails';
+import GoldOffersContainer from '@components/games/gold/GoldOffersContainer';
+import { productDetails } from '@components/home/ProductDetails';
 import { getGames } from '@lib/supabase';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -22,6 +24,12 @@ export default async function GamePage({ params }: any) {
   const currentTag = params.game[1];
   const pageInfo = gamesDetails[currentGame.path]?.[currentTag ?? '/'];
 
+  const products = currentTag
+    ? currentGame.products.filter((product) =>
+        product.tags.includes(currentTag)
+      )
+    : currentGame.products;
+
   return (
     <div className='flex w-full'>
       {/* Tag/Category menu container */}
@@ -33,9 +41,7 @@ export default async function GamePage({ params }: any) {
       <div className='flex flex-col w-full relative bg-[#191f3d]'>
         <div className='absolute'>
           <Image
-            src={
-              'https://mantfjleobdnclzanarv.supabase.co/storage/v1/object/public/next-commerce-images/BG_WoW.webp'
-            }
+            src={currentGame.bg_img_url ?? ''}
             alt='dragon'
             width='0'
             height='0'
@@ -72,6 +78,62 @@ export default async function GamePage({ params }: any) {
             )}
           </div>
           {pageInfo?.title && pageInfo.title}
+          {currentTag === 'gold' ? (
+            <GoldOffersContainer game={currentGame} />
+          ) : (
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-4 max-w-full'>
+              {products.map((product) => (
+                <a
+                  key={product.id}
+                  href={`/games/${currentGame.path}/${product.path}`}
+                  className='overflow-hidden rounded-md h-[300px]'
+                >
+                  <div
+                    className='flex p-4 rounded-md border border-gray-700 shadow-dp04 product-card'
+                    style={{
+                      backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.1), rgba(30, 34, 66, 0.8), rgba(30, 34, 66, 0.99)), url('${product.image_url}')`,
+                      width: '100%',
+                      height: '100%',
+                    }}
+                  >
+                    <div className='flex flex-col justify-end'>
+                      <h4 className='font-lg font-semibold'>{product.name}</h4>
+                      <div className='text-gray-300 text-[14px] leading-[22px]'>
+                        {product.details}
+                      </div>
+                      {productDetails[currentGame.path][product.path] &&
+                        productDetails[currentGame.path][product.path]}
+                      {product.sale_price ? (
+                        <>
+                          <div className='mt-4 bg-green text-sm text-black font-semibold p-1 px-3 rounded-lg max-w-fit'>
+                            Save{' '}
+                            {Math.round(
+                              (1 - product.sale_price / product.price) * 100
+                            )}
+                            %
+                          </div>
+                          <div className='font-bold mt-1 text-sm'>
+                            From{' '}
+                            <span className='text-green text-lg'>
+                              ${product.sale_price}
+                            </span>{' '}
+                            <span className='line-through text-sm text-gray-400 font-semibold'>
+                              ${product.price}
+                            </span>
+                          </div>
+                        </>
+                      ) : (
+                        <div className='font-bold mt-4'>
+                          From ${product.price}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          )}
+
           {pageInfo?.content && pageInfo.content}
         </div>
       </div>
