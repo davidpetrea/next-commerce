@@ -1,6 +1,6 @@
 'use client';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 const WowGoldFilters = ({
   region,
@@ -25,12 +25,34 @@ const WowGoldFilters = ({
       current.set(`${field}`, value);
     }
 
+    //on change, remove page query param
+    current.delete('page');
+
     const search = current.toString();
 
     const query = search ? `?${search}` : '';
 
     router.push(`${pathname}${query}`);
   };
+
+  const setDefaultQueryParams = useCallback(() => {
+    const current = new URLSearchParams(searchParams as any);
+
+    const region = current.get('region');
+    if (!region) {
+      current.set('region', 'eu');
+
+      const search = current.toString();
+
+      const query = search ? `?${search}` : '';
+
+      router.push(`${pathname}${query}`);
+    }
+  }, [pathname, router, searchParams]);
+
+  useEffect(() => {
+    setDefaultQueryParams();
+  }, [setDefaultQueryParams]);
 
   return (
     <div className='flex flex-col md:flex-row items-center gap-8'>

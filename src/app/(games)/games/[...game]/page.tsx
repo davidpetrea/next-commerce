@@ -15,7 +15,6 @@ export const dynamic = 'force-dynamic';
 
 export default async function GamePage({ params, searchParams }: any) {
   const { data: games } = await getGames();
-  console.log(searchParams);
   if (!games) {
     return <div>No games found.</div>;
   }

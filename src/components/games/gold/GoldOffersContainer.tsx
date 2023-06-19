@@ -83,20 +83,27 @@ export default async function GoldOffersContainer({
         <div className='p-4' />
         <WowGoldFilters region={region} faction={faction} />
         {/* Offers container */}
-        <div className='flex flex-col gap-2 my-4'>
-          {offers.map((offer) => (
-            <OfferItem key={offer.id} offer={offer} game={game} />
-          ))}
-        </div>
+        {offers.length > 0 ? (
+          <div className='flex flex-col gap-2 my-4'>
+            {offers.map((offer) => (
+              <OfferItem key={offer.id} offer={offer} game={game} />
+            ))}
+          </div>
+        ) : (
+          <div className='my-24 text-center'>
+            No offers matching your filters were found. Try again later.
+          </div>
+        )}
+
         {/* Pagination */}
-        {count && count > PAGE_SIZE && (
+        {count && count > PAGE_SIZE ? (
           <div className='my-4'>
             <Pagination
               count={Math.ceil(count / PAGE_SIZE)}
               page={page === 0 ? 1 : page}
             />
           </div>
-        )}
+        ) : null}
       </div>
     );
   }
