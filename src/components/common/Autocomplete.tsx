@@ -1,9 +1,37 @@
-import React from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { Autocomplete, TextField } from '@mui/material';
 
-const CustomAutocomplete = ({ options }: { options: string[] }) => {
-  const [value, setValue] = React.useState<string | null>('');
+export type AutocompleteHandle = {
+  clearAutocompleteValue: () => void;
+};
+
+const CustomAutocomplete = (
+  {
+    options,
+    handleServerChange,
+    defaultValue,
+  }: {
+    options: string[];
+    handleServerChange?: (value: string) => void;
+    defaultValue?: string;
+    ref: any;
+  },
+  ref: React.Ref<AutocompleteHandle>
+) => {
+  const [value, setValue] = React.useState<string | null>(defaultValue ?? '');
   const [inputValue, setInputValue] = React.useState('');
+
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        clearAutocompleteValue() {
+          setValue('');
+        },
+      };
+    },
+    []
+  );
 
   return (
     <div className='w-full md:w-[300px]'>
@@ -11,6 +39,9 @@ const CustomAutocomplete = ({ options }: { options: string[] }) => {
         value={value}
         onChange={(event: any, newValue: string | null) => {
           setValue(newValue);
+          if (handleServerChange) {
+            handleServerChange(newValue ?? '');
+          }
         }}
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => {
@@ -23,5 +54,4 @@ const CustomAutocomplete = ({ options }: { options: string[] }) => {
     </div>
   );
 };
-
-export default CustomAutocomplete;
+export default forwardRef(CustomAutocomplete);

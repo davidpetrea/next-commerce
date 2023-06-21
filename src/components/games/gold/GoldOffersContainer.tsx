@@ -19,19 +19,33 @@ const getGoldOffers = async ({
   gameId,
   region,
   faction,
+  server,
+  serverList,
   page,
 }: {
   gameId: string;
   region?: string;
   faction?: string;
+  server?: string;
+  serverList?: Game['servers'];
   page?: number;
 }) => {
+  //get server id
+  let serverId = server
+    ? serverList?.filter(
+        (serverOption) =>
+          serverOption.name.replaceAll(' ', '').trim() === server.split('-')[0]
+      )
+    : undefined;
   const { from, to } = getPagination(page, PAGE_SIZE);
   let query = supabase
     .from('gold_offers')
-    .select('*, user:users(id,name,avatar_url), server_name:servers(name)', {
-      count: 'exact',
-    })
+    .select(
+      '*, user:users(id,name,avatar_url), server_name:servers(name,region)',
+      {
+        count: 'exact',
+      }
+    )
     .eq('game_id', gameId);
 
   if (region) {
@@ -40,6 +54,10 @@ const getGoldOffers = async ({
   if (faction) {
     query = query.eq('faction', faction);
   }
+  if (serverId) {
+    query = query.eq('server', serverId[0].id);
+  }
+
   const { data, count, error } = await query.range(from, to);
 
   return { data, count, error };
@@ -55,13 +73,13 @@ export default async function GoldOffersContainer({
   const factionSearch = searchParams?.faction ?? '';
   const regionSearch = searchParams?.region ?? 'eu';
   const pageSearch = searchParams?.page ?? '';
+  const serverSearch = searchParams?.server ?? '';
 
   const faction = Array.isArray(factionSearch)
     ? factionSearch[0]
     : factionSearch;
-
   const region = Array.isArray(regionSearch) ? regionSearch[0] : regionSearch;
-
+  const server = Array.isArray(serverSearch) ? serverSearch[0] : serverSearch;
   const page = Array.isArray(pageSearch) ? +pageSearch[0] : +pageSearch;
 
   const {
@@ -72,6 +90,8 @@ export default async function GoldOffersContainer({
     gameId: game.id,
     faction,
     region,
+    server,
+    serverList: game.servers,
     page,
   });
 
@@ -86,9 +106,14 @@ export default async function GoldOffersContainer({
         <WowGoldFilters
           region={region}
           faction={faction}
-          serverOptions={game.servers.map(
-            (server) => `${server.name} - ${server.region.toLocaleUpperCase()}`
-          )}
+          serverOptions={game.servers
+            .filter((server) => server.region === region)
+            .map(
+              (server) =>
+                `${
+                  server.name.charAt(0).toUpperCase() + server.name.slice(1)
+                } - ${server.region.toLocaleUpperCase()}`
+            )}
         />
         {/* Offers container */}
         {offers.length > 0 ? (

@@ -1,7 +1,16 @@
 'use client';
-import CustomAutocomplete from '@components/common/Autocomplete';
+import CustomAutocomplete, {
+  AutocompleteHandle,
+} from '@components/common/Autocomplete';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
+
+type FilterField = 'region' | 'faction' | 'server';
+type FunctionParams = {
+  region: 'eu' | 'us';
+  faction: 'horde' | 'alliance' | '';
+  server: string | '';
+};
 
 const WowGoldFilters = ({
   serverOptions,
@@ -16,16 +25,34 @@ const WowGoldFilters = ({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const handleFilterChange = (
-    field: 'region' | 'faction',
-    value: 'eu' | 'us' | 'horde' | 'alliance' | ''
+  const serverQuery = searchParams.get('server');
+  const [serverOption] = serverOptions.filter(
+    (option) => option.trim().toLowerCase().replaceAll(' ', '') === serverQuery
+  );
+
+  const autocompleteRef = useRef<AutocompleteHandle>(null);
+
+  const handleFilterChange = <T extends FilterField>(
+    field: T,
+    value: FunctionParams[T]
   ) => {
     const current = new URLSearchParams(searchParams as any);
 
     if (value === '') {
       current.delete(`${field}`);
     } else {
-      current.set(`${field}`, value);
+      current.set(
+        `${field}`,
+        field === 'server'
+          ? value.trim().toLowerCase().replaceAll(' ', '')
+          : value
+      );
+    }
+
+    //if region is changing, delete server query param
+    if (field === 'region') {
+      current.delete(`server`);
+      autocompleteRef.current?.clearAutocompleteValue();
     }
 
     //on change, remove page query param
@@ -38,6 +65,7 @@ const WowGoldFilters = ({
     router.push(`${pathname}${query}`);
   };
 
+  //Set default query region to EU
   const setDefaultQueryParams = useCallback(() => {
     const current = new URLSearchParams(searchParams as any);
 
@@ -96,7 +124,14 @@ const WowGoldFilters = ({
         </>
       </FiltersContainer>
       {/* Server Search autocomplete */}
-      <CustomAutocomplete options={serverOptions} />
+      <CustomAutocomplete
+        ref={autocompleteRef}
+        options={serverOptions}
+        defaultValue={serverOption ?? ''}
+        handleServerChange={(value: string) =>
+          handleFilterChange('server', value)
+        }
+      />
     </div>
   );
 };
