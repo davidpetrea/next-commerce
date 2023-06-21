@@ -9,6 +9,18 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      factions: {
+        Row: {
+          name: string;
+        };
+        Insert: {
+          name: string;
+        };
+        Update: {
+          name?: string;
+        };
+        Relationships: [];
+      };
       games: {
         Row: {
           bg_img_url: string | null;
@@ -38,8 +50,8 @@ export interface Database {
           created_at: string | null;
           faction: string;
           game_id: string;
-          id: number;
           minimum_amount: number | null;
+          offer_id: string;
           price: number;
           region: string;
           server: string;
@@ -51,8 +63,8 @@ export interface Database {
           created_at?: string | null;
           faction: string;
           game_id: string;
-          id?: number;
           minimum_amount?: number | null;
+          offer_id?: string;
           price: number;
           region: string;
           server: string;
@@ -64,8 +76,8 @@ export interface Database {
           created_at?: string | null;
           faction?: string;
           game_id?: string;
-          id?: number;
           minimum_amount?: number | null;
+          offer_id?: string;
           price?: number;
           region?: string;
           server?: string;
@@ -75,9 +87,27 @@ export interface Database {
         };
         Relationships: [
           {
+            foreignKeyName: 'gold_offers_faction_fkey';
+            columns: ['faction'];
+            referencedRelation: 'factions';
+            referencedColumns: ['name'];
+          },
+          {
             foreignKeyName: 'gold_offers_game_id_fkey';
             columns: ['game_id'];
             referencedRelation: 'games';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'gold_offers_region_fkey';
+            columns: ['region'];
+            referencedRelation: 'regions';
+            referencedColumns: ['name'];
+          },
+          {
+            foreignKeyName: 'gold_offers_server_fkey';
+            columns: ['server'];
+            referencedRelation: 'servers';
             referencedColumns: ['id'];
           },
           {
@@ -155,6 +185,52 @@ export interface Database {
             columns: ['game_id'];
             referencedRelation: 'games';
             referencedColumns: ['id'];
+          }
+        ];
+      };
+      regions: {
+        Row: {
+          name: string;
+        };
+        Insert: {
+          name: string;
+        };
+        Update: {
+          name?: string;
+        };
+        Relationships: [];
+      };
+      servers: {
+        Row: {
+          game_id: string;
+          id: string;
+          name: string;
+          region: string;
+        };
+        Insert: {
+          game_id: string;
+          id?: string;
+          name: string;
+          region: string;
+        };
+        Update: {
+          game_id?: string;
+          id?: string;
+          name?: string;
+          region?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'servers_game_id_fkey';
+            columns: ['game_id'];
+            referencedRelation: 'games';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'servers_region_fkey';
+            columns: ['region'];
+            referencedRelation: 'regions';
+            referencedColumns: ['name'];
           }
         ];
       };

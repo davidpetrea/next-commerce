@@ -29,7 +29,9 @@ const getGoldOffers = async ({
   const { from, to } = getPagination(page, PAGE_SIZE);
   let query = supabase
     .from('gold_offers')
-    .select('*, user:users(id,name,avatar_url)', { count: 'exact' })
+    .select('*, user:users(id,name,avatar_url), server_name:servers(name)', {
+      count: 'exact',
+    })
     .eq('game_id', gameId);
 
   if (region) {
@@ -51,7 +53,7 @@ export default async function GoldOffersContainer({
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
   const factionSearch = searchParams?.faction ?? '';
-  const regionSearch = searchParams?.region ?? '';
+  const regionSearch = searchParams?.region ?? 'eu';
   const pageSearch = searchParams?.page ?? '';
 
   const faction = Array.isArray(factionSearch)
@@ -81,12 +83,18 @@ export default async function GoldOffersContainer({
     return (
       <div>
         <div className='p-4' />
-        <WowGoldFilters region={region} faction={faction} />
+        <WowGoldFilters
+          region={region}
+          faction={faction}
+          serverOptions={game.servers.map(
+            (server) => `${server.name} - ${server.region.toLocaleUpperCase()}`
+          )}
+        />
         {/* Offers container */}
         {offers.length > 0 ? (
           <div className='flex flex-col gap-2 my-4'>
             {offers.map((offer) => (
-              <OfferItem key={offer.id} offer={offer} game={game} />
+              <OfferItem key={offer.offer_id} offer={offer} game={game} />
             ))}
           </div>
         ) : (
@@ -115,7 +123,7 @@ const OfferItem = ({ offer, game }: { offer: Offer; game: Game }) => {
       {/* Left container */}
       <div className='flex flex-col gap-2 flex-1'>
         <div className='font-bold text-black'>
-          <span className='capitalize'>{offer.server}</span> -{' '}
+          <span className='capitalize'>{offer.server_name?.name}</span> -{' '}
           <span className='uppercase'>{offer.region}</span> - {offer.stock} gold
           in stock
         </div>

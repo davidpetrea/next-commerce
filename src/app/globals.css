@@ -45,3 +45,22 @@ body {
 .MuiPagination-ul {
   justify-content: center;
 }
+
+.MuiAutocomplete-inputRoot[class*='MuiOutlinedInput-root']
+  .MuiOutlinedInput-notchedOutline {
+  border-color: #5b21b6;
+}
+.MuiOutlinedInput-input {
+  color: #ffffff;
+  font-weight: 700;
+}
+.MuiInputLabel-root {
+  color: #ffffff;
+  font-weight: 600;
+}
+.MuiSvgIcon-root {
+  fill: #5b21b6;
+}
+.MuiInputLabel-root.Mui-focused {
+  color: #ffffff;
+}

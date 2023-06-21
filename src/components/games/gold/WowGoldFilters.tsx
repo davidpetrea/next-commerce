@@ -1,11 +1,14 @@
 'use client';
+import CustomAutocomplete from '@components/common/Autocomplete';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useCallback, useEffect } from 'react';
 
 const WowGoldFilters = ({
+  serverOptions,
   region,
   faction,
 }: {
+  serverOptions: string[];
   region: string;
   faction: string;
 }) => {
@@ -55,7 +58,7 @@ const WowGoldFilters = ({
   }, [setDefaultQueryParams]);
 
   return (
-    <div className='flex flex-col md:flex-row items-center gap-8'>
+    <div className='flex flex-col md:flex-row items-center gap-8 flex-wrap'>
       {/* Region */}
       <FiltersContainer>
         <>
@@ -92,6 +95,8 @@ const WowGoldFilters = ({
           />
         </>
       </FiltersContainer>
+      {/* Server Search autocomplete */}
+      <CustomAutocomplete options={serverOptions} />
     </div>
   );
 };
