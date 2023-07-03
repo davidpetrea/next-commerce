@@ -87,34 +87,34 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'gold_offers_faction_fkey';
-            columns: ['faction'];
-            referencedRelation: 'factions';
-            referencedColumns: ['name'];
+            foreignKeyName: "gold_offers_faction_fkey";
+            columns: ["faction"];
+            referencedRelation: "factions";
+            referencedColumns: ["name"];
           },
           {
-            foreignKeyName: 'gold_offers_game_id_fkey';
-            columns: ['game_id'];
-            referencedRelation: 'games';
-            referencedColumns: ['id'];
+            foreignKeyName: "gold_offers_game_id_fkey";
+            columns: ["game_id"];
+            referencedRelation: "games";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'gold_offers_region_fkey';
-            columns: ['region'];
-            referencedRelation: 'regions';
-            referencedColumns: ['name'];
+            foreignKeyName: "gold_offers_region_fkey";
+            columns: ["region"];
+            referencedRelation: "regions";
+            referencedColumns: ["name"];
           },
           {
-            foreignKeyName: 'gold_offers_server_fkey';
-            columns: ['server'];
-            referencedRelation: 'servers';
-            referencedColumns: ['id'];
+            foreignKeyName: "gold_offers_server_fkey";
+            columns: ["server"];
+            referencedRelation: "servers";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'gold_offers_user_id_fkey';
-            columns: ['user_id'];
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
+            foreignKeyName: "gold_offers_user_id_fkey";
+            columns: ["user_id"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
           }
         ];
       };
@@ -181,10 +181,10 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'products_game_id_fkey';
-            columns: ['game_id'];
-            referencedRelation: 'games';
-            referencedColumns: ['id'];
+            foreignKeyName: "products_game_id_fkey";
+            columns: ["game_id"];
+            referencedRelation: "games";
+            referencedColumns: ["id"];
           }
         ];
       };
@@ -221,16 +221,16 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'servers_game_id_fkey';
-            columns: ['game_id'];
-            referencedRelation: 'games';
-            referencedColumns: ['id'];
+            foreignKeyName: "servers_game_id_fkey";
+            columns: ["game_id"];
+            referencedRelation: "games";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: 'servers_region_fkey';
-            columns: ['region'];
-            referencedRelation: 'regions';
-            referencedColumns: ['name'];
+            foreignKeyName: "servers_region_fkey";
+            columns: ["region"];
+            referencedRelation: "regions";
+            referencedColumns: ["name"];
           }
         ];
       };
@@ -255,10 +255,10 @@ export interface Database {
         };
         Relationships: [
           {
-            foreignKeyName: 'users_id_fkey';
-            columns: ['id'];
-            referencedRelation: 'users';
-            referencedColumns: ['id'];
+            foreignKeyName: "users_id_fkey";
+            columns: ["id"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
           }
         ];
       };

@@ -1,21 +1,24 @@
-import './globals.css';
-import { Inter } from 'next/font/google';
+import { EmotionCacheProvider } from "@components/context/EmotionCacheProvider";
+import "./globals.css";
+import { Inter } from "next/font/google";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: 'Next Commerce ',
-  description: 'The Next E-commerce experience.',
+  title: "Next Commerce ",
+  description: "The Next E-commerce experience.",
 };
 
 export default async function HomeLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: JSX.Element;
 }) {
   return (
-    <html lang='en'>
-      <body className={inter.className}>{children}</body>
+    <html lang="en">
+      <body className={inter.className}>
+        <EmotionCacheProvider>{children}</EmotionCacheProvider>
+      </body>
     </html>
   );
 }

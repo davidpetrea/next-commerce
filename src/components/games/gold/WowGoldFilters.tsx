@@ -1,15 +1,15 @@
-'use client';
+"use client";
 import CustomAutocomplete, {
   AutocompleteHandle,
-} from '@components/common/Autocomplete';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import React, { useCallback, useEffect, useRef } from 'react';
+} from "@components/common/Autocomplete";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import React, { useCallback, useEffect, useRef } from "react";
 
-type FilterField = 'region' | 'faction' | 'server';
+type FilterField = "region" | "faction" | "server";
 type FunctionParams = {
-  region: 'eu' | 'us';
-  faction: 'horde' | 'alliance' | '';
-  server: string | '';
+  region: "eu" | "us";
+  faction: "horde" | "alliance" | "";
+  server: string | "";
 };
 
 const WowGoldFilters = ({
@@ -25,9 +25,9 @@ const WowGoldFilters = ({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const serverQuery = searchParams.get('server');
+  const serverQuery = searchParams.get("server");
   const [serverOption] = serverOptions.filter(
-    (option) => option.trim().toLowerCase().replaceAll(' ', '') === serverQuery
+    (option) => option.trim().toLowerCase().replaceAll(" ", "") === serverQuery
   );
 
   const autocompleteRef = useRef<AutocompleteHandle>(null);
@@ -38,29 +38,29 @@ const WowGoldFilters = ({
   ) => {
     const current = new URLSearchParams(searchParams as any);
 
-    if (value === '') {
+    if (value === "") {
       current.delete(`${field}`);
     } else {
       current.set(
         `${field}`,
-        field === 'server'
-          ? value.trim().toLowerCase().replaceAll(' ', '')
+        field === "server"
+          ? value.trim().toLowerCase().replaceAll(" ", "")
           : value
       );
     }
 
     //if region is changing, delete server query param
-    if (field === 'region') {
+    if (field === "region") {
       current.delete(`server`);
       autocompleteRef.current?.clearAutocompleteValue();
     }
 
     //on change, remove page query param
-    current.delete('page');
+    current.delete("page");
 
     const search = current.toString();
 
-    const query = search ? `?${search}` : '';
+    const query = search ? `?${search}` : "";
 
     router.push(`${pathname}${query}`);
   };
@@ -69,13 +69,13 @@ const WowGoldFilters = ({
   const setDefaultQueryParams = useCallback(() => {
     const current = new URLSearchParams(searchParams as any);
 
-    const region = current.get('region');
+    const region = current.get("region");
     if (!region) {
-      current.set('region', 'eu');
+      current.set("region", "eu");
 
       const search = current.toString();
 
-      const query = search ? `?${search}` : '';
+      const query = search ? `?${search}` : "";
 
       router.push(`${pathname}${query}`);
     }
@@ -86,19 +86,19 @@ const WowGoldFilters = ({
   }, [setDefaultQueryParams]);
 
   return (
-    <div className='flex flex-col md:flex-row items-center gap-8 flex-wrap'>
+    <div className="flex flex-col md:flex-row items-center gap-8 flex-wrap">
       {/* Region */}
       <FiltersContainer>
         <>
           <FilterButton
-            label='eu'
-            isActive={region === 'eu'}
-            onClick={() => handleFilterChange('region', 'eu')}
+            label="eu"
+            isActive={region === "eu"}
+            onClick={() => handleFilterChange("region", "eu")}
           />
           <FilterButton
-            label='us'
-            isActive={region === 'us'}
-            onClick={() => handleFilterChange('region', 'us')}
+            label="us"
+            isActive={region === "us"}
+            onClick={() => handleFilterChange("region", "us")}
           />
         </>
       </FiltersContainer>
@@ -106,20 +106,20 @@ const WowGoldFilters = ({
       <FiltersContainer>
         <>
           <FilterButton
-            label='any faction'
-            isActive={faction === ''}
-            onClick={() => handleFilterChange('faction', '')}
+            label="any faction"
+            isActive={faction === ""}
+            onClick={() => handleFilterChange("faction", "")}
           />
           <FilterButton
-            label='horde'
-            isActive={faction === 'horde'}
-            onClick={() => handleFilterChange('faction', 'horde')}
+            label="horde"
+            isActive={faction === "horde"}
+            onClick={() => handleFilterChange("faction", "horde")}
           />
 
           <FilterButton
-            label='alliance'
-            isActive={faction === 'alliance'}
-            onClick={() => handleFilterChange('faction', 'alliance')}
+            label="alliance"
+            isActive={faction === "alliance"}
+            onClick={() => handleFilterChange("faction", "alliance")}
           />
         </>
       </FiltersContainer>
@@ -127,9 +127,9 @@ const WowGoldFilters = ({
       <CustomAutocomplete
         ref={autocompleteRef}
         options={serverOptions}
-        defaultValue={serverOption ?? ''}
+        defaultValue={serverOption ?? ""}
         handleServerChange={(value: string) =>
-          handleFilterChange('server', value)
+          handleFilterChange("server", value)
         }
       />
     </div>
@@ -163,7 +163,7 @@ const FilterButton = ({
       disabled={isActive}
       onClick={onClick}
       className={`${
-        isActive ? 'bg-violet-800 border border-[#ffffff4d]' : ''
+        isActive ? "bg-violet-800 border border-[#ffffff4d]" : ""
       } py-4 px-5 rounded-md font-bold text-sm uppercase flex-1 whitespace-nowrap`}
     >
       {label}

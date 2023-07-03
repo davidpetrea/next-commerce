@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import TextField from '@components/common/TextField';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { RegisterSchema } from '@utils/schemas';
-import Link from 'next/link';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@lib/supabase/schema';
-import type { SubmitHandler } from 'react-hook-form';
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import TextField from "@components/common/TextField";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { RegisterSchema } from "@utils/schemas";
+import Link from "next/link";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@lib/supabase/schema";
+import type { SubmitHandler } from "react-hook-form";
 
 interface FormValues {
   email: string;
@@ -25,14 +25,14 @@ const RegisterForm = () => {
     resolver: zodResolver(RegisterSchema),
   });
 
-  const [errorMessage, setErrorMessage] = useState('');
-  const [verificationMessage, setVerificationMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
+  const [verificationMessage, setVerificationMessage] = useState("");
 
   const supabase = createClientComponentClient<Database>();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    setVerificationMessage('');
-    setErrorMessage('');
+    setVerificationMessage("");
+    setErrorMessage("");
     const { email, password, name } = data;
     const { data: signUpData, error } = await supabase.auth.signUp({
       email,
@@ -45,17 +45,17 @@ const RegisterForm = () => {
       },
     });
     if (error) {
-      setErrorMessage('Something went wrong. Please try again later.');
+      setErrorMessage("Something went wrong. Please try again later.");
     } else {
       if (signUpData?.user?.identities?.length === 0) {
         setErrorMessage(
-          'This email is already used. Log in or use a different email to sign up.'
+          "This email is already used. Log in or use a different email to sign up."
         );
-        setVerificationMessage('');
+        setVerificationMessage("");
       } else {
-        setErrorMessage('');
+        setErrorMessage("");
         setVerificationMessage(
-          'A verification link has been sent to your email address.'
+          "A verification link has been sent to your email address."
         );
       }
     }
@@ -64,52 +64,52 @@ const RegisterForm = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className='flex flex-col gap-2 w-full max-w-[24rem]'
+      className="flex flex-col gap-2 w-full max-w-[24rem]"
     >
       {verificationMessage && (
-        <div className='text-sm text-green bg-neutral-900 border border-green rounded-md p-4'>
+        <div className="text-sm text-green bg-neutral-900 border border-green rounded-md p-4">
           {verificationMessage}
         </div>
       )}
       {errorMessage && (
-        <div className='text-sm text-amaranth bg-neutral-900 border border-amaranth rounded-md p-4'>
+        <div className="text-sm text-amaranth bg-neutral-900 border border-amaranth rounded-md p-4">
           {errorMessage}
         </div>
       )}
       <TextField
-        inputProps={{ ...register('email') }}
-        id='email'
+        inputProps={{ ...register("email") }}
+        id="email"
         label="What's your email?"
-        placeholder='Enter your email...'
+        placeholder="Enter your email..."
         error={errors?.email?.message?.toString()}
       />
       <TextField
-        inputProps={{ ...register('password') }}
-        id='password'
-        label='Pick a password'
-        placeholder='Enter your password...'
+        inputProps={{ ...register("password") }}
+        id="password"
+        label="Pick a password"
+        placeholder="Enter your password..."
         error={errors?.password?.message?.toString()}
-        type='password'
+        type="password"
       />
       <TextField
-        inputProps={{ ...register('name') }}
-        id='name'
-        label='Choose a display name'
-        placeholder='Enter a profile name...'
+        inputProps={{ ...register("name") }}
+        id="name"
+        label="Choose a display name"
+        placeholder="Enter a profile name..."
         error={errors?.name?.message?.toString()}
       />
-      <p className='text-xs text-center mt-8 mb-4'>
+      <p className="text-xs text-center mt-8 mb-4">
         By clicking on sign-up, you agree to Next Cores&apos;s Terms of Service.
       </p>
       <button
-        type='submit'
-        className='rounded-full px-8 py-4 bg-gradient-to-r from-green to-seablue text-black font-semibold hover:scale-105 transition-all duration-150 ease-linear active:brightness-75'
+        type="submit"
+        className="rounded-full px-8 py-4 bg-gradient-to-r from-green to-seablue text-black font-semibold hover:scale-105 transition-all duration-150 ease-linear active:brightness-75"
       >
         Sign up
       </button>
-      <p className='text-center text-sm mt-8'>
-        Already have an account?{' '}
-        <Link href='/login' className='text-orange underline'>
+      <p className="text-center text-sm mt-8">
+        Already have an account?{" "}
+        <Link href="/login" className="text-orange underline">
           Log in.
         </Link>
       </p>

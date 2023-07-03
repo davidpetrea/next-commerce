@@ -1,5 +1,5 @@
-import React, { forwardRef, useImperativeHandle } from 'react';
-import { Autocomplete, TextField } from '@mui/material';
+import React, { forwardRef, useImperativeHandle } from "react";
+import { Autocomplete, TextField } from "@mui/material";
 
 export type AutocompleteHandle = {
   clearAutocompleteValue: () => void;
@@ -18,15 +18,15 @@ const CustomAutocomplete = (
   },
   ref: React.Ref<AutocompleteHandle>
 ) => {
-  const [value, setValue] = React.useState<string | null>(defaultValue ?? '');
-  const [inputValue, setInputValue] = React.useState('');
+  const [value, setValue] = React.useState<string | null>(defaultValue ?? "");
+  const [inputValue, setInputValue] = React.useState("");
 
   useImperativeHandle(
     ref,
     () => {
       return {
         clearAutocompleteValue() {
-          setValue('');
+          setValue("");
         },
       };
     },
@@ -34,13 +34,13 @@ const CustomAutocomplete = (
   );
 
   return (
-    <div className='w-full md:w-[300px]'>
+    <div className="w-full md:w-[300px]">
       <Autocomplete
         value={value}
         onChange={(event: any, newValue: string | null) => {
           setValue(newValue);
           if (handleServerChange) {
-            handleServerChange(newValue ?? '');
+            handleServerChange(newValue ?? "");
           }
         }}
         inputValue={inputValue}
@@ -48,7 +48,7 @@ const CustomAutocomplete = (
           setInputValue(newInputValue);
         }}
         options={options}
-        renderInput={(params) => <TextField {...params} label='SERVER' />}
+        renderInput={(params) => <TextField {...params} label="SERVER" />}
         fullWidth={true}
       />
     </div>
