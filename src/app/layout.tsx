@@ -1,7 +1,6 @@
-import { EmotionCacheProvider } from "@components/context/EmotionCacheProvider";
 import "./globals.css";
 import { Inter } from "next/font/google";
-
+import Providers from "./providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -17,7 +16,7 @@ export default async function HomeLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <EmotionCacheProvider>{children}</EmotionCacheProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

@@ -4,8 +4,12 @@ import { CacheProvider } from "@emotion/react";
 import createEmotionCache from "@utils/createEmotionCache";
 const clientSideEmotionCache = createEmotionCache();
 
-export const EmotionCacheProvider = ({ children }: { children:JSX.Element }) => {
+export const EmotionCacheProvider = ({
+  children,
+}: {
+  children: JSX.Element;
+}) => {
   return (
-    <CacheProvider value={clientSideEmotionCache}> {children}</CacheProvider>
+    <CacheProvider value={clientSideEmotionCache}>{children}</CacheProvider>
   );
 };
