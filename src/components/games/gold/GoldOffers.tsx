@@ -3,9 +3,10 @@
 import CustomPagination from "@components/common/Pagination";
 import { Game, getGoldOffers } from "@lib/supabase";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useState } from "react";
 import OffersSkeleton from "./loading/OffersSkeleton";
 import OfferItem from "./OfferItem";
+import GoldOfferDialog from "./dialog/GoldOfferDialog";
 
 const PAGE_SIZE = 3;
 
@@ -16,6 +17,8 @@ const GoldOffers = ({
   game: Game;
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
+  const [selectedOffer, setSelectedOffer] = useState<string | null>(null);
+
   const factionSearch = searchParams?.faction ?? "";
   const regionSearch = searchParams?.region ?? "eu";
   const pageSearch = searchParams?.page ?? "";
@@ -55,33 +58,44 @@ const GoldOffers = ({
     return <div>Something went wrong. Please try refreshing the page.</div>;
   }
 
-  if (queryData) {
-    const { data: offers, count } = queryData;
-    return (
-      <>
-        {offers && offers.length > 0 ? (
-          <div className="flex flex-col gap-2 my-4">
-            {offers.map((offer) => (
-              <OfferItem key={offer.offer_id} offer={offer} game={game} />
-            ))}
-          </div>
-        ) : (
-          <div className="my-24 text-center">
-            No offers matching your filters were found. Try again later.
-          </div>
-        )}
-        {/* Pagination */}
-        {count && count > PAGE_SIZE ? (
-          <div className="my-4">
-            <CustomPagination
-              count={Math.ceil(count / PAGE_SIZE)}
-              page={page === 0 ? 1 : page}
+  const { data: offers, count } = queryData!;
+  return (
+    <>
+      {offers && offers.length > 0 ? (
+        <div className="flex flex-col gap-2 my-4">
+          {offers.map((offer) => (
+            <OfferItem
+              key={offer.offer_id}
+              offer={offer}
+              game={game}
+              handleSelect={() => setSelectedOffer(offer.offer_id)}
             />
-          </div>
-        ) : null}
-      </>
-    );
-  }
+          ))}
+        </div>
+      ) : (
+        <div className="my-24 text-center">
+          No offers matching your filters were found. Try again later.
+        </div>
+      )}
+      {/* Pagination */}
+      {count && count > PAGE_SIZE ? (
+        <div className="my-4">
+          <CustomPagination
+            count={Math.ceil(count / PAGE_SIZE)}
+            page={page === 0 ? 1 : page}
+          />
+        </div>
+      ) : null}
+      {/* Offer dialog  */}
+      {selectedOffer && (
+        <GoldOfferDialog
+          isOpen={!!selectedOffer}
+          offerId={selectedOffer}
+          handleClose={() => setSelectedOffer(null)}
+        />
+      )}
+    </>
+  );
 };
 
 export default GoldOffers;

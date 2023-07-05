@@ -33,21 +33,6 @@ export async function getGames() {
   return { data, error };
 }
 
-// export async function getGoldOffers(
-//   gameId: string,
-//   region: string,
-//   faction: string
-// ) {
-//   const { data, error } = await supabase
-//     .from("gold_offers")
-//     .select("*, user:users(id,name,avatar_url), server_name:servers(name)")
-//     .eq("game_id", gameId)
-//     .eq("region", region)
-//     .eq("faction", faction);
-
-//   return { data, error };
-// }
-
 export async function getGoldOffers({
   gameId,
   region,
@@ -97,6 +82,21 @@ export async function getGoldOffers({
   return { data, count };
 }
 
+export async function getGoldOfferById({ offerId }: { offerId: string }) {
+  const { data, error } = await supabase
+    .from("gold_offers")
+    .select(
+      "*, user:users(id,name,avatar_url), server_name:servers(name,region), game:games(id,name)"
+    )
+    .eq("offer_id", offerId)
+    .limit(1)
+    .single();
+
+  return data;
+}
+
+//get reviews by user
+
 type UsersResponse = Awaited<ReturnType<typeof getUserById>>;
 export type UsersResponseSuccess = UsersResponse["data"];
 export type UsersResponseError = UsersResponse["error"];
@@ -108,8 +108,10 @@ export type GamesResponseSuccess = GamesResponse["data"];
 export type Game = ElementType<GamesResponseSuccess>;
 
 type GoldOffersResponse = Awaited<ReturnType<typeof getGoldOffers>>;
-export type GoldOffersResponseSuccess = GoldOffersResponse["data"] & {
-  server: number;
-};
+export type GoldOffersResponseSuccess = GoldOffersResponse["data"];
 
 export type Offer = ElementType<GoldOffersResponseSuccess>;
+
+type GoldOfferResponse = Awaited<ReturnType<typeof getGoldOfferById>>;
+
+export type OfferExtended = GoldOfferResponse;

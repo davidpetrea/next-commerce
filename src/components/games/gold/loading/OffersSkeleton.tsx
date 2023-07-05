@@ -17,7 +17,7 @@ const OffersSkeleton = () => {
 const OfferItem = () => {
   return (
     <div className="bg-slate-50 rounded-md p-4 flex flex-col md:flex-row items-start md:items-center gap-2 text-black shadow-dp04 h-[88px]">
-      <div className="flex flex-col gap-2 flex-1 animate-pulse">
+      <div className="hidden md:flex flex-col gap-2 flex-1 animate-pulse ">
         <div className="bg-gray-300 h-4 w-32 rounded-lg"></div>
         <div className="bg-gray-300 h-4 w-28 rounded-lg"></div>
       </div>
