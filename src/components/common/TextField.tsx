@@ -72,10 +72,14 @@ const TextField = ({
         ) : null}
       </div>
       {error ? (
-        <span className="mt-1 text-xs text-left text-amaranth">{error}</span>
+        <span className="mt-1 text-xs font-semibold text-left text-amaranth">
+          {error}
+        </span>
       ) : null}
       {subtext && (
-        <span className="text-xs text-white-medium mt-1">{subtext}</span>
+        <span className="text-xs text-white-medium font-semibold mt-1">
+          {subtext}
+        </span>
       )}
     </div>
   );

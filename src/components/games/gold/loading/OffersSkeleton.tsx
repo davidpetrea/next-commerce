@@ -4,7 +4,7 @@ const OffersSkeleton = () => {
   const size = 10;
   const itemsArray = [];
   for (let i = 1; i <= size; i++) {
-    itemsArray.push(<OfferItem />);
+    itemsArray.push(<OfferItem key={i} />);
   }
 
   return (

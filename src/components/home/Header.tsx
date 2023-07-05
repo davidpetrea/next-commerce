@@ -6,6 +6,7 @@ import type { Database } from "@lib/supabase/schema";
 import Image from "next/image";
 import UserHeaderMenu from "./UserHeaderMenu";
 import { ArrowDown } from "@assets/SvgComponents";
+import CartButton from "./header/CartButton";
 
 export const revalidate = 0;
 
@@ -75,6 +76,7 @@ export default async function Header() {
         <span className="font-bold">Next C.</span>
       </Link>
       {authPanel}
+      <CartButton />
     </header>
   );
 }
