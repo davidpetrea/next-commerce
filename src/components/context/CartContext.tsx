@@ -1,9 +1,15 @@
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { v4 as uuidv4 } from "uuid";
+import Cookies from "js-cookie";
+
 import {
   Dispatch,
   Reducer,
   createContext,
   useContext,
+  useEffect,
   useReducer,
+  useState,
 } from "react";
 
 const initialCart: CartState = {
@@ -21,10 +27,15 @@ type CartState = {
   sessionId: string | undefined;
 };
 
-type CartAction = {
-  type: string;
-  payload: {};
-};
+type CartAction =
+  | {
+      type: "add";
+      payload: any;
+    }
+  | {
+      type: "setSessionId";
+      payload: any;
+    };
 
 const cartReducer: Reducer<CartState, CartAction> = (state, action) => {
   switch (action.type) {
@@ -34,8 +45,14 @@ const cartReducer: Reducer<CartState, CartAction> = (state, action) => {
         items: [...state.items, "item"],
       };
     }
+    case "setSessionId": {
+      return {
+        ...state,
+        sessionId: action.payload,
+      };
+    }
     default: {
-      throw Error("Unknown action: " + action.type);
+      throw Error("Unknown action: " + action);
     }
   }
 
@@ -44,6 +61,41 @@ const cartReducer: Reducer<CartState, CartAction> = (state, action) => {
 
 export function CartProvider({ children }: { children: JSX.Element }) {
   const [cart, dispatch] = useReducer(cartReducer, initialCart);
+  //Supabase auth session
+
+  const { auth } = createClientComponentClient();
+  //Cart query that depends on session?
+
+  useEffect(() => {
+    console.log("This should run once.");
+    const getSessionCart = async () => {
+      const { data } = await auth.getSession();
+
+      if (data.session) {
+        console.log("session found, setting it...");
+
+        //delete sessionId cookie
+        Cookies.remove("sessionId");
+        //get cart info from db
+      } else {
+        console.log("no session found, getting cookies");
+        const sessionId = Cookies.get("sessionId");
+
+        //If no cookie found, generate new uuid and insert in db
+        if (!sessionId) {
+          const newSessionId = uuidv4();
+          Cookies.set("sessionId", newSessionId);
+          dispatch({ type: "setSessionId", payload: newSessionId });
+        } else {
+          console.log("found cookie!", sessionId);
+          //set sessionId in state
+          dispatch({ type: "setSessionId", payload: sessionId });
+        }
+      }
+    };
+
+    getSessionCart();
+  }, [auth]);
 
   return (
     <CartContext.Provider value={cart}>
