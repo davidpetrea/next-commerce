@@ -47,7 +47,9 @@ export default async function Header() {
           <>
             <UserHeaderMenu>
               <div className="flex items-center gap-2">
-                <div>{currentUser[0].name}</div>
+                <div className="hidden md:inline-block">
+                  {currentUser[0].name}
+                </div>
                 <span className="rounded-full transition-color duration-150 text-black font-semibold">
                   <Image
                     src={currentUser[0].avatar_url}
@@ -75,8 +77,10 @@ export default async function Header() {
       <Link href="/">
         <span className="font-bold">Next C.</span>
       </Link>
-      {authPanel}
-      <CartButton />
+      <div className="flex items-center gap-4">
+        {authPanel}
+        <CartButton />
+      </div>
     </header>
   );
 }

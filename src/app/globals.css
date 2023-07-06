@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
+  --foreground-rgb: 23, 23, 23;
   --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --background-end-rgb: 23, 23, 23;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
+    --background-start-rgb: 23, 23, 23;
     --background-end-rgb: 0, 0, 0;
   }
 }
@@ -46,7 +46,7 @@ body {
   justify-content: center;
 }
 
-.MuiAutocomplete-inputRoot[class*='MuiOutlinedInput-root']
+.MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"]
   .MuiOutlinedInput-notchedOutline {
   border-color: #5b21b6;
 }

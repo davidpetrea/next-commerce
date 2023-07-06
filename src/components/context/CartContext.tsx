@@ -14,6 +14,7 @@ import { UserCartItem } from "@lib/supabase";
 
 const initialCart: CartState = {
   items: [],
+  isOpen: false,
   sessionId: undefined,
 };
 
@@ -24,6 +25,7 @@ export const CartDispatchContext = createContext<Dispatch<CartAction>>(
 
 type CartState = {
   items: UserCartItem[];
+  isOpen: boolean;
   sessionId: string | undefined;
 };
 
@@ -39,10 +41,28 @@ type CartAction =
   | {
       type: "setItems";
       payload: UserCartItem[];
+    }
+  | {
+      type: "openCart";
+    }
+  | {
+      type: "closeCart";
     };
 
 const cartReducer: Reducer<CartState, CartAction> = (state, action) => {
   switch (action.type) {
+    case "openCart": {
+      return {
+        ...state,
+        isOpen: true,
+      };
+    }
+    case "closeCart": {
+      return {
+        ...state,
+        isOpen: false,
+      };
+    }
     case "add": {
       return {
         ...state,
@@ -93,17 +113,16 @@ export function CartProvider({ children }: { children: JSX.Element }) {
       } else {
         const sessionId = Cookies.get("sessionId");
 
-        //If no cookie found, generate new uuid and insert in db
+        //If no cookie found, generate new uuid and set it
         if (!sessionId) {
           const newSessionId = uuidv4();
           Cookies.set("sessionId", newSessionId);
           dispatch({ type: "setSessionId", payload: newSessionId });
-          //insert session inside db
         } else {
           console.log("found cookie!", sessionId);
           //set sessionId in state
           dispatch({ type: "setSessionId", payload: sessionId });
-             //get session from db and set cart items
+          //get session from db and set cart items
         }
       }
     };
