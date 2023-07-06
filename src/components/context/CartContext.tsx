@@ -9,8 +9,8 @@ import {
   useContext,
   useEffect,
   useReducer,
-  useState,
 } from "react";
+import { UserCartItem } from "@lib/supabase";
 
 const initialCart: CartState = {
   items: [],
@@ -23,18 +23,22 @@ export const CartDispatchContext = createContext<Dispatch<CartAction>>(
 );
 
 type CartState = {
-  items: string[];
+  items: UserCartItem[];
   sessionId: string | undefined;
 };
 
 type CartAction =
   | {
       type: "add";
-      payload: any;
+      payload: UserCartItem;
     }
   | {
       type: "setSessionId";
-      payload: any;
+      payload: string;
+    }
+  | {
+      type: "setItems";
+      payload: UserCartItem[];
     };
 
 const cartReducer: Reducer<CartState, CartAction> = (state, action) => {
@@ -42,7 +46,13 @@ const cartReducer: Reducer<CartState, CartAction> = (state, action) => {
     case "add": {
       return {
         ...state,
-        items: [...state.items, "item"],
+        items: [...state.items, action.payload],
+      };
+    }
+    case "setItems": {
+      return {
+        ...state,
+        items: action.payload,
       };
     }
     case "setSessionId": {
@@ -63,22 +73,24 @@ export function CartProvider({ children }: { children: JSX.Element }) {
   const [cart, dispatch] = useReducer(cartReducer, initialCart);
   //Supabase auth session
 
-  const { auth } = createClientComponentClient();
-  //Cart query that depends on session?
+  const supabase = createClientComponentClient();
 
   useEffect(() => {
     console.log("This should run once.");
     const getSessionCart = async () => {
-      const { data } = await auth.getSession();
+      const { data } = await supabase.auth.getSession();
 
       if (data.session) {
-        console.log("session found, setting it...");
-
         //delete sessionId cookie
         Cookies.remove("sessionId");
         //get cart info from db
+        const { data: cartItems } = await supabase
+          .from("cart_items_auth")
+          .select("*")
+          .eq("user_id", data.session.user.id);
+
+        dispatch({ type: "setItems", payload: cartItems! });
       } else {
-        console.log("no session found, getting cookies");
         const sessionId = Cookies.get("sessionId");
 
         //If no cookie found, generate new uuid and insert in db
@@ -86,16 +98,18 @@ export function CartProvider({ children }: { children: JSX.Element }) {
           const newSessionId = uuidv4();
           Cookies.set("sessionId", newSessionId);
           dispatch({ type: "setSessionId", payload: newSessionId });
+          //insert session inside db
         } else {
           console.log("found cookie!", sessionId);
           //set sessionId in state
           dispatch({ type: "setSessionId", payload: sessionId });
+             //get session from db and set cart items
         }
       }
     };
 
     getSessionCart();
-  }, [auth]);
+  }, [supabase]);
 
   return (
     <CartContext.Provider value={cart}>

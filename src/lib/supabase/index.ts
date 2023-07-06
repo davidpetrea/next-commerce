@@ -83,7 +83,7 @@ export async function getGoldOffers({
 }
 
 export async function getGoldOfferById({ offerId }: { offerId: string }) {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("gold_offers")
     .select(
       "*, user:users(id,name,avatar_url), server_name:servers(name,region), game:games(id,name)"
@@ -95,7 +95,16 @@ export async function getGoldOfferById({ offerId }: { offerId: string }) {
   return data;
 }
 
-//get reviews by user
+export async function getCartItemsByUser({ userId }: { userId: string }) {
+  const { data } = await supabase
+    .from("cart_items_auth")
+    .select("*")
+    .eq("user_id", userId);
+
+  return data;
+}
+
+//TODO:get reviews by user
 
 type UsersResponse = Awaited<ReturnType<typeof getUserById>>;
 export type UsersResponseSuccess = UsersResponse["data"];
@@ -112,6 +121,10 @@ export type GoldOffersResponseSuccess = GoldOffersResponse["data"];
 
 export type Offer = ElementType<GoldOffersResponseSuccess>;
 
-type GoldOfferResponse = Awaited<ReturnType<typeof getGoldOfferById>>;
+export type OfferExtended = Awaited<ReturnType<typeof getGoldOfferById>>;
 
-export type OfferExtended = GoldOfferResponse;
+export type UserCartItems = Awaited<ReturnType<typeof getCartItemsByUser>>;
+
+export type UserCartItem = ElementType<UserCartItems>;
+
+//TODO: GuestCartItems

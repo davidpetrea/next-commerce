@@ -3,12 +3,73 @@ export type Json =
   | number
   | boolean
   | null
-  | { [key: string]: Json }
+  | { [key: string]: Json | undefined }
   | Json[];
 
 export interface Database {
   public: {
     Tables: {
+      cart_items_auth: {
+        Row: {
+          cart_item_id: string;
+          created_at: string | null;
+          gold_offer_id: string | null;
+          meta: Json | null;
+          product_id: string;
+          quantity: number | null;
+          seller_id: string | null;
+          total_price: number | null;
+          user_id: string;
+        };
+        Insert: {
+          cart_item_id?: string;
+          created_at?: string | null;
+          gold_offer_id?: string | null;
+          meta?: Json | null;
+          product_id: string;
+          quantity?: number | null;
+          seller_id?: string | null;
+          total_price?: number | null;
+          user_id: string;
+        };
+        Update: {
+          cart_item_id?: string;
+          created_at?: string | null;
+          gold_offer_id?: string | null;
+          meta?: Json | null;
+          product_id?: string;
+          quantity?: number | null;
+          seller_id?: string | null;
+          total_price?: number | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "cart_items_auth_gold_offer_id_fkey";
+            columns: ["gold_offer_id"];
+            referencedRelation: "gold_offers";
+            referencedColumns: ["offer_id"];
+          },
+          {
+            foreignKeyName: "cart_items_auth_product_id_fkey";
+            columns: ["product_id"];
+            referencedRelation: "products";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "cart_items_auth_seller_id_fkey";
+            columns: ["seller_id"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "cart_items_auth_user_id_fkey";
+            columns: ["user_id"];
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
       factions: {
         Row: {
           name: string;

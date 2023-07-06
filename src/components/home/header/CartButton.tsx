@@ -10,11 +10,8 @@ const CartButton = () => {
   return (
     <div>
       CartButton
-      <div>Items: {items}</div>
+      <div>Items: {JSON.stringify(items)}</div>
       <div>sessionId: {sessionId}</div>
-      <button onClick={() => dispatch({ type: "add", payload: {} })}>
-        Add
-      </button>
     </div>
   );
 };
