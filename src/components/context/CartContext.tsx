@@ -16,6 +16,10 @@ const initialCart: CartState = {
   items: [],
   isOpen: false,
   sessionId: undefined,
+  promoCode: {
+    code: undefined,
+    value: undefined,
+  },
 };
 
 export const CartContext = createContext<CartState>(initialCart);
@@ -26,7 +30,11 @@ export const CartDispatchContext = createContext<Dispatch<CartAction>>(
 type CartState = {
   items: UserCartItem[];
   isOpen: boolean;
-  sessionId: string | undefined;
+  sessionId?: string;
+  promoCode: {
+    code?: string;
+    value?: number;
+  };
 };
 
 type CartAction =

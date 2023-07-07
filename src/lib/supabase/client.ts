@@ -43,6 +43,18 @@ export async function getCartItemsByUser({ userId }: { userId: string }) {
   return data;
 }
 
+export async function validatePromoCode({ code }: { code: string }) {
+  const { data, error } = await supabase
+    .from("promo_codes")
+    .select("*")
+    .eq("code", code)
+    .single();
+
+  if (!data || error) throw new Error("Invalid promo code.");
+
+  return data;
+}
+
 type GoldOffersResponse = Awaited<ReturnType<typeof getGoldOffers>>;
 
 export type Offer = ElementType<GoldOffersResponse>;

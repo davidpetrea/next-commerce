@@ -5,11 +5,10 @@ import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment, useState } from "react";
 import CartItem from "./CartItem";
 import Link from "next/link";
-import { TextField } from "@mui/material";
 import PromoForm from "./PromoForm";
 
 const CartDialog = () => {
-  const { isOpen, items } = useCart();
+  const { isOpen, items, promoCode } = useCart();
   const dispatch = useCartDispatch();
 
   const [showPromoInput, setShowPromoInput] = useState(false);
@@ -25,7 +24,9 @@ const CartDialog = () => {
     0
   );
 
-  //TODO: Promo code logic
+  const finalPrice = promoCode.value
+    ? totalPrice * (1 - promoCode.value)
+    : totalPrice;
 
   return (
     <Transition
@@ -102,13 +103,26 @@ const CartDialog = () => {
                       showPromoInput ? "max-h-[120px]" : "max-h-0"
                     } overflow-hidden transition-all duration-300 ease-linear`}
                   >
-                    <PromoForm />
+                    <PromoForm setShowPromoInput={setShowPromoInput}/>
                   </div>
                 </div>
 
                 <div className="p-4 flex justify-between items-center">
-                  <div className="text-sm text-slate-400">Subtotal</div>
-                  <div className="font-bold">${totalPrice}</div>
+                  <div className="text-sm text-slate-400">
+                    Subtotal{" "}
+                    {promoCode.code && (
+                      <span className="p-2 bg-gradient-to-l from-green-500/30 to-transparent font-semibold text-green-400 rounded-md">
+                        {promoCode.code} - {promoCode.value! * 100}%
+                      </span>
+                    )}
+                  </div>
+                  <div
+                    className={`font-bold ${
+                      promoCode.value && "text-green-400"
+                    }`}
+                  >
+                    ${finalPrice}
+                  </div>
                 </div>
                 <div className="p-4">
                   <button className="bg-purple-600 text-sm font-semibold p-4 active:brightness-75 hover:bg-purple-700 transition duration-100 ease-in-out w-full rounded-md">

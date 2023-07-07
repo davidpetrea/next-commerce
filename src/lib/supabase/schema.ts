@@ -258,6 +258,30 @@ export interface Database {
           }
         ];
       };
+      promo_codes: {
+        Row: {
+          available_until: string | null;
+          code: string;
+          created_at: string | null;
+          id: string;
+          value: number;
+        };
+        Insert: {
+          available_until?: string | null;
+          code?: string;
+          created_at?: string | null;
+          id?: string;
+          value: number;
+        };
+        Update: {
+          available_until?: string | null;
+          code?: string;
+          created_at?: string | null;
+          id?: string;
+          value?: number;
+        };
+        Relationships: [];
+      };
       regions: {
         Row: {
           name: string;

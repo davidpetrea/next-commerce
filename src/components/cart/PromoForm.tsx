@@ -1,22 +1,54 @@
-import { PromoCodeIcon } from "@assets/SvgComponents";
+import { LoadingSpinner, PromoCodeIcon } from "@assets/SvgComponents";
 import TextField from "@components/common/TextField";
+import { useCartDispatch } from "@components/context/CartContext";
+import useValidatePromoCodeMutation from "@components/mutations/useValidatePromoCodeMutation";
 
 import React from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 interface FormValues {
   code: string;
 }
 
-const PromoForm = () => {
+const PromoForm = ({
+  setShowPromoInput,
+}: {
+  setShowPromoInput: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
+    reset,
   } = useForm<FormValues>();
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const { mutate, isLoading } = useValidatePromoCodeMutation();
+
+  const dispatch = useCartDispatch();
+
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    mutate(
+      { code: data.code },
+      {
+        onSuccess: (data) => {
+          dispatch({
+            type: "setPromoCode",
+            payload: {
+              code: data.code,
+              value: data.value,
+            },
+          });
+          reset();
+          setShowPromoInput(false);
+        },
+        onError: () => {
+          setError("code", {
+            message: "Invalid promo code.",
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -26,7 +58,11 @@ const PromoForm = () => {
           id="code"
           inputProps={{
             ...register("code", {
-              max: {
+              required: {
+                value: true,
+                message: "Promo code can not be empty.",
+              },
+              maxLength: {
                 value: 32,
                 message: "Invalid promo code.",
               },
@@ -37,7 +73,11 @@ const PromoForm = () => {
         />
 
         <button className="bg-neutral-800 border-[0.5px] border-purple-700 rounded-md text-sm font-semibold px-4 p-2 max-h-min">
-          Apply
+          {isLoading ? (
+            <LoadingSpinner className="w-5 h-5 fill-purple-700" />
+          ) : (
+            "Apply"
+          )}
         </button>
       </form>
       {errors.code?.message && (
