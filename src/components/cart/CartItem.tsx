@@ -36,8 +36,6 @@ const CartItem = ({ item }: { item: UserCartItem }) => {
     ? [item.offer?.server?.region.toUpperCase(), item.offer?.faction, name]
     : [];
 
-  console.log(item.seller);
-
   return (
     <div className="p-4 bg-zinc-800 rounded-md flex items-start gap-4">
       {/* TODO: for gold offers, add query param to specific gold offer and open dialog */}

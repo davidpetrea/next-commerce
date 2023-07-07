@@ -1,16 +1,31 @@
 "use client";
-import { XIcon } from "@assets/SvgComponents";
+import { MinusIcon, PlusIcon, XIcon } from "@assets/SvgComponents";
 import { useCart, useCartDispatch } from "@components/context/CartContext";
 import { Dialog, Transition } from "@headlessui/react";
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import CartItem from "./CartItem";
 import Link from "next/link";
+import { TextField } from "@mui/material";
+import PromoForm from "./PromoForm";
 
 const CartDialog = () => {
   const { isOpen, items } = useCart();
   const dispatch = useCartDispatch();
 
+  const [showPromoInput, setShowPromoInput] = useState(false);
+
+  const handlePromoToggle = () => {
+    setShowPromoInput((prev) => !prev);
+  };
+
   const handleClose = () => dispatch({ type: "closeCart" });
+
+  const totalPrice = items.reduce(
+    (acc: number, curr) => acc + curr.total_price!,
+    0
+  );
+
+  //TODO: Promo code logic
 
   return (
     <Transition
@@ -63,23 +78,42 @@ const CartDialog = () => {
                   </Link>
                 </div>
               )}
-              {/* Footer */}
-              <div className="mb-[68px] border-t border-slate-50">
-                <div className="flex justify-between w-full items-center">
-                  <div>Items</div>
-                  <div>$315</div>
+              {/* Total and checkout */}
+              <div className="mb-[68px] border-t-[0.5px] border-slate-600">
+                <div className="p-4 flex justify-between items-center">
+                  <div className="text-sm text-slate-400">Item(s)</div>
+                  <div className="font-bold">${totalPrice}</div>
                 </div>
-                <div className="flex justify-between w-full items-center">
-                  <div>Items</div>
-                  <div>$315</div>
+                <div className="p-4 border-y-[0.5px] border-slate-600">
+                  <div className="flex justify-between items-center">
+                    <div className="text-sm font-semibold">
+                      Apply promo code
+                    </div>
+                    <button onClick={handlePromoToggle} className="font-bold">
+                      {showPromoInput ? (
+                        <MinusIcon className="w-6 h-6" />
+                      ) : (
+                        <PlusIcon className="w-6 h-6" />
+                      )}
+                    </button>
+                  </div>
+                  <div
+                    className={`${
+                      showPromoInput ? "max-h-[120px]" : "max-h-0"
+                    } overflow-hidden transition-all duration-300 ease-linear`}
+                  >
+                    <PromoForm />
+                  </div>
                 </div>
-                <div className="flex justify-between w-full items-center">
-                  <div>Items</div>
-                  <div>$315</div>
+
+                <div className="p-4 flex justify-between items-center">
+                  <div className="text-sm text-slate-400">Subtotal</div>
+                  <div className="font-bold">${totalPrice}</div>
                 </div>
-                <div className="flex justify-between w-full items-center">
-                  <div>Items</div>
-                  <div>$315</div>
+                <div className="p-4">
+                  <button className="bg-purple-600 text-sm font-semibold p-4 active:brightness-75 hover:bg-purple-700 transition duration-100 ease-in-out w-full rounded-md">
+                    Secure checkout
+                  </button>
                 </div>
               </div>
             </div>

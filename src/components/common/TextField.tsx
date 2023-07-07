@@ -15,7 +15,8 @@ type TestFieldProps = {
   disabled?: boolean;
   subtext?: string;
   hasMaxWidth?: boolean;
-  inputProps?: any;
+  inputProps?: any; //TODO: replace with proper input props
+  leftIcon?: JSX.Element;
 };
 
 const TextField = ({
@@ -28,6 +29,7 @@ const TextField = ({
   inputProps,
   placeholder,
   subtext,
+  leftIcon,
 }: TestFieldProps) => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -43,9 +45,12 @@ const TextField = ({
         </label>
       )}
       <div className="relative flex">
+        {leftIcon && <div className="absolute top-3 left-3">{leftIcon}</div>}
         <input
           disabled={disabled}
-          className={`disabled:opacity-50 bg-surface-dp00 px-3 py-3 rounded-lg text-sm w-full placeholder-white-disabled border ${
+          className={`disabled:opacity-50 bg-surface-dp00 py-3 ${
+            leftIcon ? "pl-10 pr-3" : "px-3"
+          } rounded-lg text-sm w-full placeholder-white-disabled border ${
             error ? "border-amaranth" : "border-white-disabled"
           }`}
           id={id}

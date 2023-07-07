@@ -51,6 +51,13 @@ type CartAction =
     }
   | {
       type: "closeCart";
+    }
+  | {
+      type: "setPromoCode";
+      payload: {
+        code: string;
+        value: number;
+      };
     };
 
 const cartReducer: Reducer<CartState, CartAction> = (state, action) => {
@@ -91,6 +98,12 @@ const cartReducer: Reducer<CartState, CartAction> = (state, action) => {
       return {
         ...state,
         sessionId: action.payload,
+      };
+    }
+    case "setPromoCode": {
+      return {
+        ...state,
+        promoCode: action.payload,
       };
     }
     default: {
