@@ -6,7 +6,7 @@ import type { Database } from "@lib/supabase/schema";
 import Image from "next/image";
 import UserHeaderMenu from "./UserHeaderMenu";
 import { ArrowDown } from "@assets/SvgComponents";
-import CartButton from "./header/CartButton";
+import CartButton from "../cart/CartButton";
 
 export const revalidate = 0;
 
@@ -72,7 +72,7 @@ export default async function Header() {
     <header
       className={`bg-neutral-900 px-8 ${
         data.session ? "py-3" : "py-4"
-      } flex justify-between items-center gap-4 sticky top-0 z-10`}
+      } flex justify-between items-center gap-4 sticky top-0 z-10 h-[68px]`}
     >
       <Link href="/">
         <span className="font-bold">Next C.</span>

@@ -5,7 +5,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment } from "react";
 
 const CartDialog = () => {
-  const { isOpen } = useCart();
+  const { isOpen, items } = useCart();
   const dispatch = useCartDispatch();
 
   const handleClose = () => dispatch({ type: "closeCart" });
@@ -31,13 +31,17 @@ const CartDialog = () => {
             <div className="flex flex-col justify-between h-full ">
               {/* Shopping cart header */}
               <div className="flex justify-between items-center bg-surface-dp03 w-full p-2">
-                <div>Shopping cart</div>
+                <div className="font-semibold">
+                  Shopping cart{" "}
+                  {items.length > 0 &&
+                    `(${items.length} ${items.length > 1 ? "items" : "item"})`}
+                </div>
                 <button onClick={handleClose} className="p-3">
                   <XIcon className="w-5 h-5 fill-violet-800" />
                 </button>
               </div>
               {/* Items list */}
-              <div className="flex flex-col grow-[2] text-5xl overflow-y-auto">
+              <div className="flex flex-col grow-[2] text-5xl overflow-y-auto p-4">
                 <div>Item 1</div>
                 <div>Item 1</div>
                 <div>Item 1</div>
