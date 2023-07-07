@@ -46,6 +46,7 @@ const GoldOfferForm = ({
     if (auth.session) {
       //auth add to cart
 
+      //TODO: move this into mutation
       try {
         const response = await addItemToCartAuth({
           userId: auth.session.user.id,
@@ -59,7 +60,7 @@ const GoldOfferForm = ({
         if (response) {
           //Add item to items[], close offer dialog and open cart
           handleClose();
-          dispatch({ type: "add", payload: response });
+          dispatch({ type: "add", payload: response[0] });
           dispatch({ type: "openCart" });
         }
         //add item to client state

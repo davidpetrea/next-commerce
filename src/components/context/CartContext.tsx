@@ -35,6 +35,10 @@ type CartAction =
       payload: UserCartItem;
     }
   | {
+      type: "remove";
+      payload: string;
+    }
+  | {
       type: "setSessionId";
       payload: string;
     }
@@ -69,6 +73,14 @@ const cartReducer: Reducer<CartState, CartAction> = (state, action) => {
         items: [...state.items, action.payload],
       };
     }
+    case "remove": {
+      return {
+        ...state,
+        items: state.items.filter(
+          (item) => item.cart_item_id !== action.payload
+        ),
+      };
+    }
     case "setItems": {
       return {
         ...state,
@@ -85,8 +97,6 @@ const cartReducer: Reducer<CartState, CartAction> = (state, action) => {
       throw Error("Unknown action: " + action);
     }
   }
-
-  return state;
 };
 
 export function CartProvider({ children }: { children: JSX.Element }) {

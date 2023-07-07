@@ -113,7 +113,7 @@ export async function addItemToCartAuth({
   price: number;
   meta?: {};
 }) {
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("cart_items_auth")
     .insert({
       user_id: userId,
@@ -130,7 +130,9 @@ export async function addItemToCartAuth({
       offer:gold_offers(offer_id, faction, server:servers(name,region)),
       seller:users!seller_id(name)`
     )
-    .single();
+    .returns<UserCartItem[]>();
+
+  if (!data || error) return;
 
   return data;
 }

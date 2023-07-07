@@ -1,10 +1,27 @@
 import { ClockIcon, ProfileIcon, TrashIcon } from "@assets/SvgComponents";
+import { useCartDispatch } from "@components/context/CartContext";
+import useRemoveUserCartItemMutation from "@components/mutations/useRemoveUserCartItemMutation";
 import { UserCartItem } from "@lib/supabase/client";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 const CartItem = ({ item }: { item: UserCartItem }) => {
+  const { mutate, isLoading } = useRemoveUserCartItemMutation();
+
+  const dispatch = useCartDispatch();
+
+  const handleRemove = () => {
+    mutate(
+      { cartItemId: item.cart_item_id },
+      {
+        onSuccess: () => {
+          dispatch({ type: "remove", payload: item.cart_item_id });
+        },
+      }
+    );
+  };
+
   const productUrl = `/games/${item.product?.game?.path}/${item.product?.path}`;
 
   const serverName = item.gold_offer_id ? item.offer?.server?.name : undefined;
@@ -18,6 +35,8 @@ const CartItem = ({ item }: { item: UserCartItem }) => {
   const tags = item.gold_offer_id
     ? [item.offer?.server?.region.toUpperCase(), item.offer?.faction, name]
     : [];
+
+  console.log(item.seller);
 
   return (
     <div className="p-4 bg-zinc-800 rounded-md flex items-start gap-4">
@@ -59,7 +78,7 @@ const CartItem = ({ item }: { item: UserCartItem }) => {
         <div className="flex gap-1 text-sm text-slate-400">
           <ProfileIcon className="w-4 h-4 fill-slate-400" />
           <div>
-            <span className="font-bold">Sold by:</span> {item.seller[0].name}
+            <span className="font-bold">Sold by:</span> {item.seller.name!}
           </div>
         </div>
         {/* Delivery */}
@@ -77,9 +96,15 @@ const CartItem = ({ item }: { item: UserCartItem }) => {
               Quantity: <span className="text-slate-50">{item.quantity}</span>
             </div>
           )}
-          <button className="flex items-center gap-1">
+          <button
+            disabled={isLoading}
+            onClick={handleRemove}
+            className="flex items-center gap-1"
+          >
             <TrashIcon className="w-4 h-4 fill-slate-400" />
-            <div className="font-bold">Remove</div>
+            <div className="font-bold">
+              {isLoading ? "Removing..." : "Remove"}
+            </div>
           </button>
         </div>
       </div>
