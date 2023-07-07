@@ -15,7 +15,7 @@ export interface Database {
           created_at: string | null;
           gold_offer_id: string | null;
           meta: Json | null;
-          product_id: string;
+          product_id: string | null;
           quantity: number | null;
           seller_id: string | null;
           total_price: number | null;
@@ -26,7 +26,7 @@ export interface Database {
           created_at?: string | null;
           gold_offer_id?: string | null;
           meta?: Json | null;
-          product_id: string;
+          product_id?: string | null;
           quantity?: number | null;
           seller_id?: string | null;
           total_price?: number | null;
@@ -37,7 +37,7 @@ export interface Database {
           created_at?: string | null;
           gold_offer_id?: string | null;
           meta?: Json | null;
-          product_id?: string;
+          product_id?: string | null;
           quantity?: number | null;
           seller_id?: string | null;
           total_price?: number | null;

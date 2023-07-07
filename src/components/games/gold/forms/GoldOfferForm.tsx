@@ -1,6 +1,8 @@
 "use client";
 import TextField from "@components/common/TextField";
-import { OfferExtended } from "@lib/supabase";
+import { useCartDispatch } from "@components/context/CartContext";
+import { OfferExtended, addItemToCartAuth } from "@lib/supabase";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
@@ -10,10 +12,9 @@ interface FormValues {
 }
 
 const GoldOfferForm = ({ offer }: { offer: OfferExtended }) => {
-  //react hook form
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log("data:", data);
-  };
+  const supabase = createClientComponentClient();
+
+  const dispatch = useCartDispatch();
 
   const {
     register,
@@ -29,6 +30,39 @@ const GoldOfferForm = ({ offer }: { offer: OfferExtended }) => {
   });
 
   const amount = watch("amount");
+
+  const totalPrice = ((+amount / +offer?.unit!) * +offer?.price!).toFixed(2);
+
+  //react hook form
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    const { data: auth } = await supabase.auth.getSession();
+
+    if (auth.session) {
+      //auth add to cart
+      console.log("User authenticated:", auth.session.user.id);
+      console.log("insert data:", data);
+
+      try {
+        const response = await addItemToCartAuth({
+          userId: auth.session.user.id,
+          offerId: offer.offer_id,
+          sellerId: offer.user_id,
+          quantity: +data.amount,
+          price: +totalPrice,
+        });
+
+        if (response) {
+          dispatch({ type: "add", payload: response });
+        }
+        //add item to client state
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      //guest add to cart
+      console.log("guest add to cart");
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -86,9 +120,7 @@ const GoldOfferForm = ({ offer }: { offer: OfferExtended }) => {
       <div className="bg-white-disabled h-[0.25px]"></div>
       <div className="p-2"></div>
       {/* Price */}
-      <div className="font-extrabold text-3xl">
-        ${((+amount / +offer?.unit!) * +offer?.price!).toFixed(2)}
-      </div>
+      <div className="font-extrabold text-3xl">${totalPrice}</div>
 
       <span className="text-xs font-bold text-gray-400 uppercase">
         15 minutes guaranteed delivery time

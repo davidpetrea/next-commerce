@@ -10,7 +10,7 @@ import {
   useEffect,
   useReducer,
 } from "react";
-import { UserCartItem } from "@lib/supabase";
+import { UserCartItem, getCartItemsByUser } from "@lib/supabase/client";
 
 const initialCart: CartState = {
   items: [],
@@ -104,10 +104,9 @@ export function CartProvider({ children }: { children: JSX.Element }) {
         //delete sessionId cookie
         Cookies.remove("sessionId");
         //get cart info from db
-        const { data: cartItems } = await supabase
-          .from("cart_items_auth")
-          .select("*")
-          .eq("user_id", data.session.user.id);
+        const cartItems = await getCartItemsByUser({
+          userId: data.session.user.id,
+        });
 
         dispatch({ type: "setItems", payload: cartItems! });
       } else {

@@ -95,14 +95,38 @@ export async function getGoldOfferById({ offerId }: { offerId: string }) {
   return data;
 }
 
-export async function getCartItemsByUser({ userId }: { userId: string }) {
+export async function addItemToCartAuth({
+  userId,
+  productId,
+  offerId,
+  sellerId,
+  quantity,
+  price,
+}: {
+  userId: string;
+  productId?: string;
+  offerId?: string;
+  sellerId: string;
+  quantity?: number;
+  price: number;
+}) {
   const { data } = await supabase
     .from("cart_items_auth")
-    .select("*")
-    .eq("user_id", userId);
+    .insert({
+      user_id: userId,
+      product_id: productId ?? null,
+      gold_offer_id: offerId ?? null,
+      seller_id: sellerId,
+      quantity: quantity ?? null,
+      total_price: price,
+    })
+    .select()
+    .single();
 
   return data;
 }
+
+//TODO: add item to cart guest
 
 //TODO:get reviews by user
 
@@ -121,10 +145,8 @@ export type GoldOffersResponseSuccess = GoldOffersResponse["data"];
 
 export type Offer = ElementType<GoldOffersResponseSuccess>;
 
-export type OfferExtended = Awaited<ReturnType<typeof getGoldOfferById>>;
-
-export type UserCartItems = Awaited<ReturnType<typeof getCartItemsByUser>>;
-
-export type UserCartItem = ElementType<UserCartItems>;
+export type OfferExtended = NonNullable<
+  Awaited<ReturnType<typeof getGoldOfferById>>
+>;
 
 //TODO: GuestCartItems

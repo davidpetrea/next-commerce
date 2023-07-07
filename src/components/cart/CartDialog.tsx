@@ -41,11 +41,10 @@ const CartDialog = () => {
                 </button>
               </div>
               {/* Items list */}
-              <div className="flex flex-col grow-[2] text-5xl overflow-y-auto p-4">
-                <div>Item 1</div>
-                <div>Item 1</div>
-                <div>Item 1</div>
-                <div>Item 1</div>
+              <div className="flex flex-col gap-2 grow-[2] text-5xl overflow-y-auto p-4">
+                {items.map((item) => (
+                  <div key={item.cart_item_id}>{item.cart_item_id}</div>
+                ))}
               </div>
               {/* Footer */}
               <div className="mb-[68px] border-t border-slate-50">
