@@ -25,7 +25,7 @@ const CartDialog = () => {
         {/* The backdrop, rendered as a fixed sibling to the panel container */}
         <div className="fixed inset-0 top-[68px] bg-black/30" />
         {/* Full-screen container to center the panel */}
-        <div className="fixed right-0 top-[68px] h-screen w-[450px]">
+        <div className="fixed right-0 top-[68px] h-screen w-[100dvw] md:w-[450px]">
           {/* The actual dialog panel  */}
           <Dialog.Panel className="h-full bg-surface-dp01 shadow-dp04">
             <div className="flex flex-col justify-between h-full ">
@@ -41,7 +41,7 @@ const CartDialog = () => {
                 </button>
               </div>
               {/* Items list */}
-              <div className="flex flex-col gap-2 grow-[2] text-5xl overflow-y-auto p-4">
+              <div className="flex flex-col gap-2 grow-[2] overflow-y-auto p-4">
                 {items.map((item) => (
                   <div key={item.cart_item_id}>{item.cart_item_id}</div>
                 ))}

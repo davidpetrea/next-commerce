@@ -70,7 +70,7 @@ export default async function Header() {
 
   return (
     <header
-      className={`bg-neutral-900 px-8 ${
+      className={`bg-neutral-900 px-4 md:px-8 ${
         data.session ? "py-3" : "py-4"
       } flex justify-between items-center gap-4 sticky top-0 z-10 h-[68px]`}
     >
