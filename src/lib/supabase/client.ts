@@ -26,7 +26,7 @@ export async function getCartItemsByUser({ userId }: { userId: string }) {
       `*,
       product:products(id,name,game:games(id,path),image_url,path),
       offer:gold_offers(offer_id, faction, server:servers(name,region)),
-      seller:seller_id(name)`
+      seller:users!seller_id(name)`
     )
     .eq("user_id", userId);
 
@@ -40,8 +40,4 @@ export type UserCartItems = NonNullable<
   Awaited<ReturnType<typeof getCartItemsByUser>>
 >;
 
-export type UserCartItem = Omit<ElementType<UserCartItems>, "seller"> & {
-  seller: {
-    name: string; //Overwrite false refering error
-  };
-}; //TODO: find cleaner solution for product field typing
+export type UserCartItem = ElementType<UserCartItems>;

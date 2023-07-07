@@ -59,7 +59,7 @@ const CartItem = ({ item }: { item: UserCartItem }) => {
         <div className="flex gap-1 text-sm text-slate-400">
           <ProfileIcon className="w-4 h-4 fill-slate-400" />
           <div>
-            <span className="font-bold">Sold by:</span> {item.seller.name}
+            <span className="font-bold">Sold by:</span> {item.seller[0].name}
           </div>
         </div>
         {/* Delivery */}

@@ -128,14 +128,25 @@ export async function addItemToCartAuth({
       `*,
       product:products(id,name,game:games(id,path),image_url,path),
       offer:gold_offers(offer_id, faction, server:servers(name,region)),
-      seller:seller_id(name)`
+      seller:users!seller_id(name)`
     )
-    .returns<UserCartItem>();
+    .single();
 
   return data;
 }
 
-//TODO: add item to cart guest
+//TODO: make sure only current user can remove/add items from cart
+export async function removeItemFromCartAuth({
+  cartItemId,
+}: {
+  cartItemId: string;
+}) {
+  await supabase
+    .from("cart_items_auth")
+    .delete()
+    .eq("cart_item_id", cartItemId);
+}
+//TODO: add item to cart guest, only able to add/remove to cart by sessionId
 
 //TODO:get reviews by user
 
