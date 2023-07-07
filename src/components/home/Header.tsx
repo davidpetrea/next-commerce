@@ -72,7 +72,7 @@ export default async function Header() {
     <header
       className={`bg-neutral-900 px-8 ${
         data.session ? "py-3" : "py-4"
-      } flex justify-between items-center gap-4 sticky top-0 z-10 shadow-dp06`}
+      } flex justify-between items-center gap-4 sticky top-0 z-10`}
     >
       <Link href="/">
         <span className="font-bold">Next C.</span>
