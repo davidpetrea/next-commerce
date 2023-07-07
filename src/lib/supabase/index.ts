@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { Database } from "./schema";
 import { getPagination } from "@utils/utils";
+import { UserCartItem } from "./client";
 
 export type ElementType<T> = T extends (infer U)[] ? U : never;
 
@@ -102,6 +103,7 @@ export async function addItemToCartAuth({
   sellerId,
   quantity,
   price,
+  meta,
 }: {
   userId: string;
   productId?: string;
@@ -109,19 +111,26 @@ export async function addItemToCartAuth({
   sellerId: string;
   quantity?: number;
   price: number;
+  meta?: {};
 }) {
   const { data } = await supabase
     .from("cart_items_auth")
     .insert({
       user_id: userId,
-      product_id: productId ?? null,
-      gold_offer_id: offerId ?? null,
+      product_id: productId,
+      gold_offer_id: offerId,
       seller_id: sellerId,
-      quantity: quantity ?? null,
+      quantity: quantity,
       total_price: price,
+      meta: JSON.stringify(meta),
     })
-    .select()
-    .single();
+    .select(
+      `*,
+      product:products(id,name,game:games(id,path),image_url,path),
+      offer:gold_offers(offer_id, faction, server:servers(name,region)),
+      seller:seller_id(name)`
+    )
+    .returns<UserCartItem>();
 
   return data;
 }

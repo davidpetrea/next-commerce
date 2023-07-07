@@ -11,7 +11,13 @@ interface FormValues {
   character?: string;
 }
 
-const GoldOfferForm = ({ offer }: { offer: OfferExtended }) => {
+const GoldOfferForm = ({
+  offer,
+  handleClose,
+}: {
+  offer: OfferExtended;
+  handleClose: () => void;
+}) => {
   const supabase = createClientComponentClient();
 
   const dispatch = useCartDispatch();
@@ -25,7 +31,7 @@ const GoldOfferForm = ({ offer }: { offer: OfferExtended }) => {
   } = useForm<FormValues>({
     mode: "onChange",
     defaultValues: {
-      amount: offer?.minimum_amount?.toString() ?? "0",
+      amount: offer?.minimum_amount?.toString() ?? offer?.unit?.toString(),
     },
   });
 
@@ -39,12 +45,11 @@ const GoldOfferForm = ({ offer }: { offer: OfferExtended }) => {
 
     if (auth.session) {
       //auth add to cart
-      console.log("User authenticated:", auth.session.user.id);
-      console.log("insert data:", data);
 
       try {
         const response = await addItemToCartAuth({
           userId: auth.session.user.id,
+          productId: offer.product_id,
           offerId: offer.offer_id,
           sellerId: offer.user_id,
           quantity: +data.amount,
@@ -52,7 +57,10 @@ const GoldOfferForm = ({ offer }: { offer: OfferExtended }) => {
         });
 
         if (response) {
+          //Add item to items[], close offer dialog and open cart
+          handleClose();
           dispatch({ type: "add", payload: response });
+          dispatch({ type: "openCart" });
         }
         //add item to client state
       } catch (err) {
@@ -82,10 +90,12 @@ const GoldOfferForm = ({ offer }: { offer: OfferExtended }) => {
           ...register("amount", {
             required: "Amount is required.",
             min: {
-              value: offer?.minimum_amount ?? 1,
-              message: `Minimum amount is ${offer?.minimum_amount?.toLocaleString(
-                "en-US"
-              )}.`,
+              value: offer?.minimum_amount ?? offer?.unit!,
+              message: `Minimum amount is ${
+                offer?.minimum_amount
+                  ? offer?.minimum_amount?.toLocaleString("en-US")
+                  : offer?.unit?.toLocaleString("en-US")
+              }.`,
             },
             onChange(e: React.ChangeEvent<HTMLInputElement>) {
               setValue(

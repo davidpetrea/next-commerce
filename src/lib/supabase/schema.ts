@@ -114,6 +114,7 @@ export interface Database {
           minimum_amount: number | null;
           offer_id: string;
           price: number;
+          product_id: string;
           region: string;
           server: string;
           stock: number;
@@ -127,6 +128,7 @@ export interface Database {
           minimum_amount?: number | null;
           offer_id?: string;
           price: number;
+          product_id: string;
           region: string;
           server: string;
           stock: number;
@@ -140,6 +142,7 @@ export interface Database {
           minimum_amount?: number | null;
           offer_id?: string;
           price?: number;
+          product_id?: string;
           region?: string;
           server?: string;
           stock?: number;
@@ -157,6 +160,12 @@ export interface Database {
             foreignKeyName: "gold_offers_game_id_fkey";
             columns: ["game_id"];
             referencedRelation: "games";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "gold_offers_product_id_fkey";
+            columns: ["product_id"];
+            referencedRelation: "products";
             referencedColumns: ["id"];
           },
           {

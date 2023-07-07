@@ -3,6 +3,8 @@ import { XIcon } from "@assets/SvgComponents";
 import { useCart, useCartDispatch } from "@components/context/CartContext";
 import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment } from "react";
+import CartItem from "./CartItem";
+import Link from "next/link";
 
 const CartDialog = () => {
   const { isOpen, items } = useCart();
@@ -41,11 +43,26 @@ const CartDialog = () => {
                 </button>
               </div>
               {/* Items list */}
-              <div className="flex flex-col gap-2 grow-[2] overflow-y-auto p-4">
-                {items.map((item) => (
-                  <div key={item.cart_item_id}>{item.cart_item_id}</div>
-                ))}
-              </div>
+              {items.length > 0 ? (
+                <div className="flex flex-col gap-2 grow-[2] overflow-y-auto p-4">
+                  {items.map((item) => (
+                    <CartItem key={item.cart_item_id} item={item} />
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-2">
+                  <div className="text-center text-slate-400">
+                    Your cart is empty.
+                  </div>
+                  <Link
+                    href="/"
+                    className="p-2 bg-purple-800 font-semibold rounded-lg"
+                    onClick={() => dispatch({ type: "closeCart" })}
+                  >
+                    Browse store
+                  </Link>
+                </div>
+              )}
               {/* Footer */}
               <div className="mb-[68px] border-t border-slate-50">
                 <div className="flex justify-between w-full items-center">

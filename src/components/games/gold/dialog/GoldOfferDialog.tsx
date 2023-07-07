@@ -56,7 +56,7 @@ const GoldOfferDialog = ({
             <TopInfo offer={offer} />
           </div>
           <div className="md:hidden bg-neutral-800 p-4">
-            <GoldOfferForm offer={offer} />
+            <GoldOfferForm offer={offer} handleClose={handleClose} />
           </div>
           <div className="">
             <Details />
@@ -66,7 +66,7 @@ const GoldOfferDialog = ({
           </div>
         </div>
         <div className="hidden md:inline-block basis-1/3 min-w-[300px] w-full bg-neutral-800 p-4">
-          <GoldOfferForm offer={offer} />
+          <GoldOfferForm offer={offer} handleClose={handleClose} />
         </div>
       </>
     );

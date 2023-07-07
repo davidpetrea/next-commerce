@@ -22,7 +22,12 @@ export async function getGoldOffers(
 export async function getCartItemsByUser({ userId }: { userId: string }) {
   const { data } = await supabase
     .from("cart_items_auth")
-    .select("*")
+    .select(
+      `*,
+      product:products(id,name,game:games(id,path),image_url,path),
+      offer:gold_offers(offer_id, faction, server:servers(name,region)),
+      seller:seller_id(name)`
+    )
     .eq("user_id", userId);
 
   return data;
@@ -35,4 +40,8 @@ export type UserCartItems = NonNullable<
   Awaited<ReturnType<typeof getCartItemsByUser>>
 >;
 
-export type UserCartItem = ElementType<UserCartItems>;
+export type UserCartItem = Omit<ElementType<UserCartItems>, "seller"> & {
+  seller: {
+    name: string; //Overwrite false refering error
+  };
+}; //TODO: find cleaner solution for product field typing
