@@ -1,6 +1,6 @@
 "use client";
 import TextField from "@components/ui/TextField";
-import { useCartDispatch } from "@components/context/CartContext";
+import { useCart, useCartDispatch } from "@components/context/CartContext";
 import useAddUserCartItemMutation from "@components/mutations/useAddUserCartItemMutation";
 import { OfferExtended } from "@lib/supabase";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -8,6 +8,8 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { showSuccessToast } from "@components/common/toasts/SuccessToast";
 import { showErrorToast } from "@components/common/toasts/ErrorToast";
+import { v4 as uuidv4 } from "uuid";
+import Cookies from "js-cookie";
 
 interface FormValues {
   amount: string;
@@ -23,6 +25,7 @@ const GoldOfferForm = ({
 }) => {
   const supabase = createClientComponentClient();
 
+  const { sessionId } = useCart();
   const dispatch = useCartDispatch();
 
   const {
@@ -48,11 +51,19 @@ const GoldOfferForm = ({
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const { data: auth } = await supabase.auth.getSession();
 
-    if (auth.session) {
-      //auth add to cart
+    let newSessionId;
+    if (!sessionId) {
+      newSessionId = uuidv4();
 
-      mutate(
-        {
+      dispatch({ type: "setSessionId", payload: newSessionId });
+
+      Cookies.set("sessionId", newSessionId, {
+        expires: 30,
+      });
+    }
+
+    const itemFields = auth.session
+      ? {
           userId: auth.session.user.id,
           productId: offer.product_id,
           offerId: offer.offer_id,
@@ -62,26 +73,34 @@ const GoldOfferForm = ({
           meta: {
             character: data.character ?? undefined,
           },
-        },
-        {
-          onSuccess: (data) => {
-            //Add item to items[], close offer dialog and open cart
-            handleClose();
-            dispatch({ type: "add", payload: data[0] });
-            dispatch({ type: "openCart" });
-            showSuccessToast("Item added to cart!");
-          },
-          onError: (error) => {
-            if (error instanceof Error) {
-              showErrorToast(error.message);
-            }
-          },
         }
-      );
-    } else {
-      //TODO:guest add to cart
-      console.log("guest add to cart");
-    }
+      : {
+          sessionId: sessionId ? sessionId : newSessionId!,
+          productId: offer.product_id,
+          offerId: offer.offer_id,
+          sellerId: offer.user_id,
+          quantity: +data.amount,
+          price: +totalPrice,
+          meta: {
+            character: data.character ?? undefined,
+          },
+        };
+
+    //auth add to cart
+    mutate(itemFields, {
+      onSuccess: (data) => {
+        //Add item to items[], close offer dialog and open cart
+        handleClose();
+        dispatch({ type: "add", payload: data[0] });
+        dispatch({ type: "openCart" });
+        showSuccessToast("Item added to cart!");
+      },
+      onError: (error) => {
+        if (error instanceof Error) {
+          showErrorToast(error.message);
+        }
+      },
+    });
   };
 
   return (

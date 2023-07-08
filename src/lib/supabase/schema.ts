@@ -9,61 +9,64 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      cart_items_auth: {
+      cart_items: {
         Row: {
+          added_at: string | null;
           cart_item_id: string;
-          created_at: string | null;
           gold_offer_id: string | null;
           meta: Json | null;
           product_id: string | null;
           quantity: number | null;
           seller_id: string | null;
+          session_id: string | null;
           total_price: number | null;
-          user_id: string;
+          user_id: string | null;
         };
         Insert: {
+          added_at?: string | null;
           cart_item_id?: string;
-          created_at?: string | null;
           gold_offer_id?: string | null;
           meta?: Json | null;
           product_id?: string | null;
           quantity?: number | null;
           seller_id?: string | null;
+          session_id?: string | null;
           total_price?: number | null;
-          user_id: string;
+          user_id?: string | null;
         };
         Update: {
+          added_at?: string | null;
           cart_item_id?: string;
-          created_at?: string | null;
           gold_offer_id?: string | null;
           meta?: Json | null;
           product_id?: string | null;
           quantity?: number | null;
           seller_id?: string | null;
+          session_id?: string | null;
           total_price?: number | null;
-          user_id?: string;
+          user_id?: string | null;
         };
         Relationships: [
           {
-            foreignKeyName: "cart_items_auth_gold_offer_id_fkey";
+            foreignKeyName: "cart_items_gold_offer_id_fkey";
             columns: ["gold_offer_id"];
             referencedRelation: "gold_offers";
             referencedColumns: ["offer_id"];
           },
           {
-            foreignKeyName: "cart_items_auth_product_id_fkey";
+            foreignKeyName: "cart_items_product_id_fkey";
             columns: ["product_id"];
             referencedRelation: "products";
             referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "cart_items_auth_seller_id_fkey";
+            foreignKeyName: "cart_items_seller_id_fkey";
             columns: ["seller_id"];
             referencedRelation: "users";
             referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "cart_items_auth_user_id_fkey";
+            foreignKeyName: "cart_items_user_id_fkey";
             columns: ["user_id"];
             referencedRelation: "users";
             referencedColumns: ["id"];

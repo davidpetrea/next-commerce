@@ -5,7 +5,7 @@ import { ElementType } from "./index";
 type Tables = Database["public"]["Tables"];
 
 type UsersTable = Tables["users"]["Row"];
-type UserCartItemsTable = Tables["cart_items_auth"]["Row"];
+type UserCartItemsTable = Tables["cart_items"]["Row"];
 type ProductsTable = Tables["products"]["Row"];
 type GamesTable = Tables["games"]["Row"];
 type OffersTable = Tables["gold_offers"]["Row"];
@@ -30,7 +30,7 @@ export async function getGoldOffers(
 
 export async function getCartItemsByUser({ userId }: { userId: string }) {
   const { data } = await supabase
-    .from("cart_items_auth")
+    .from("cart_items")
     .select(
       `*,
       product:products(id,name,game:games(id,path),image_url,path),
@@ -41,6 +41,42 @@ export async function getCartItemsByUser({ userId }: { userId: string }) {
     .returns<UserCartItem[]>();
 
   return data;
+}
+
+export async function getCartItemsByGuest({
+  sessionId,
+}: {
+  sessionId: string;
+}) {
+  const { data } = await supabase
+    .from("cart_items")
+    .select(
+      `*,
+      product:products(id,name,game:games(id,path),image_url,path),
+      offer:gold_offers(offer_id, faction, server:servers(name,region)),
+      seller:users!seller_id(name)`
+    )
+    .eq("session_id", sessionId)
+    .returns<UserCartItem[]>();
+
+  return data;
+}
+
+export async function combineCartItems({
+  userId,
+  sessionId,
+}: {
+  userId: string;
+  sessionId: string;
+}) {
+  const { error } = await supabase
+    .from("cart_items")
+    .update({
+      user_id: userId,
+    })
+    .eq("session_id", sessionId);
+
+  if (error) throw new Error("Error handling cart items.");
 }
 
 export async function validatePromoCode({ code }: { code: string }) {
@@ -55,31 +91,32 @@ export async function validatePromoCode({ code }: { code: string }) {
   return data;
 }
 
-export async function addItemToCartAuth({
-  userId,
-  productId,
-  offerId,
-  sellerId,
-  quantity,
-  price,
-  meta,
-}: AddItemToCartAuthParams) {
+export async function addItemToCart(
+  item: AddItemToCartAuthParams | AddItemToCartGuestParams
+) {
+  const insertObject: Partial<UserCartItemsTable> = {
+    product_id: item.productId,
+    gold_offer_id: item.offerId,
+    seller_id: item.sellerId,
+    quantity: item.quantity,
+    total_price: item.price,
+    meta: item.meta,
+  };
+
+  if ("sessionId" in item) {
+    insertObject.session_id = item.sessionId;
+  } else {
+    insertObject.user_id = item.userId;
+  }
+
   const { data, error } = await supabase
-    .from("cart_items_auth")
-    .insert({
-      user_id: userId,
-      product_id: productId,
-      gold_offer_id: offerId,
-      seller_id: sellerId,
-      quantity: quantity,
-      total_price: price,
-      meta: meta,
-    })
+    .from("cart_items")
+    .insert(insertObject)
     .select(
       `*,
-      product:products(id,name,game:games(id,path),image_url,path),
-      offer:gold_offers(offer_id, faction, server:servers(name,region)),
-      seller:users!seller_id(name)`
+    product:products(id,name,game:games(id,path),image_url,path),
+    offer:gold_offers(offer_id, faction, server:servers(name,region)),
+    seller:users!seller_id(name)`
     )
     .returns<UserCartItem[]>();
 
@@ -88,16 +125,13 @@ export async function addItemToCartAuth({
   return data;
 }
 
-//TODO: make sure only current user can remove/add items from cart
+//TODO: make sure only current user can remove/add items from own cart
 export async function removeItemFromCartAuth({
   cartItemId,
 }: {
   cartItemId: string;
 }) {
-  await supabase
-    .from("cart_items_auth")
-    .delete()
-    .eq("cart_item_id", cartItemId);
+  await supabase.from("cart_items").delete().eq("cart_item_id", cartItemId);
 }
 
 type GoldOffersResponse = Awaited<ReturnType<typeof getGoldOffers>>;
@@ -141,4 +175,11 @@ export type AddItemToCartAuthParams = {
   quantity?: number;
   price: number;
   meta?: CartItemMeta;
+};
+
+export type AddItemToCartGuestParams = Omit<
+  AddItemToCartAuthParams,
+  "userId"
+> & {
+  sessionId: string;
 };

@@ -10,7 +10,13 @@ import {
   useEffect,
   useReducer,
 } from "react";
-import { UserCartItem, getCartItemsByUser } from "@lib/supabase/client";
+import {
+  UserCartItem,
+  combineCartItems,
+  getCartItemsByGuest,
+  getCartItemsByUser,
+} from "@lib/supabase/client";
+import { showErrorToast } from "@components/common/toasts/ErrorToast";
 
 const initialCart: CartState = {
   items: [],
@@ -131,13 +137,24 @@ export function CartProvider({ children }: { children: JSX.Element }) {
   const supabase = createClientComponentClient();
 
   useEffect(() => {
-    console.log("This should run once.");
     const getSessionCart = async () => {
       const { data } = await supabase.auth.getSession();
 
       if (data.session) {
-        //delete sessionId cookie
-        Cookies.remove("sessionId");
+        //Combine guest cart items with user items if logged in
+        const sessionId = Cookies.get("sessionId");
+        if (sessionId) {
+          try {
+            await combineCartItems({ userId: data.session.user.id, sessionId });
+          } catch (err) {
+            if (err instanceof Error) {
+              showErrorToast(err.message);
+            }
+          }
+          //delete sessionId cookie
+          Cookies.remove("sessionId");
+        }
+
         //get cart info from db
         const cartItems = await getCartItemsByUser({
           userId: data.session.user.id,
@@ -150,13 +167,19 @@ export function CartProvider({ children }: { children: JSX.Element }) {
         //If no cookie found, generate new uuid and set it
         if (!sessionId) {
           const newSessionId = uuidv4();
-          Cookies.set("sessionId", newSessionId);
+          Cookies.set("sessionId", newSessionId, {
+            expires: 30,
+          });
           dispatch({ type: "setSessionId", payload: newSessionId });
         } else {
-          console.log("found cookie!", sessionId);
           //set sessionId in state
           dispatch({ type: "setSessionId", payload: sessionId });
           //get session from db and set cart items
+          const cartItems = await getCartItemsByGuest({
+            sessionId,
+          });
+
+          dispatch({ type: "setItems", payload: cartItems! });
         }
       }
 
