@@ -109,6 +109,10 @@ const cartReducer: Reducer<CartState, CartAction> = (state, action) => {
       };
     }
     case "setPromoCode": {
+      //save promo code in cookies, expires in 7 days
+      Cookies.set("promoCode", JSON.stringify(action.payload), {
+        expires: 7,
+      });
       return {
         ...state,
         promoCode: action.payload,
@@ -154,6 +158,12 @@ export function CartProvider({ children }: { children: JSX.Element }) {
           dispatch({ type: "setSessionId", payload: sessionId });
           //get session from db and set cart items
         }
+      }
+
+      //Set promo code
+      const promoCode = Cookies.get("promoCode");
+      if (promoCode) {
+        dispatch({ type: "setPromoCode", payload: JSON.parse(promoCode) });
       }
     };
 
