@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import OffersSkeleton from "./loading/OffersSkeleton";
 import OfferItem from "./OfferItem";
 import GoldOfferDialog from "./dialog/GoldOfferDialog";
+import { usePathname, useRouter } from "next/navigation";
 
 const PAGE_SIZE = 3;
 
@@ -17,19 +18,42 @@ const GoldOffers = ({
   game: Game;
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
-  const [selectedOffer, setSelectedOffer] = useState<string | null>(null);
+  const router = useRouter();
+  const pathname = usePathname();
 
+  const offerSearch = searchParams?.offerId ?? "";
   const factionSearch = searchParams?.faction ?? "";
   const regionSearch = searchParams?.region ?? "eu";
   const pageSearch = searchParams?.page ?? "";
   const serverSearch = searchParams?.server ?? "";
 
+  const offerId = Array.isArray(offerSearch) ? offerSearch[0] : offerSearch;
   const faction = Array.isArray(factionSearch)
     ? factionSearch[0]
     : factionSearch;
   const region = Array.isArray(regionSearch) ? regionSearch[0] : regionSearch;
   const server = Array.isArray(serverSearch) ? serverSearch[0] : serverSearch;
   const page = Array.isArray(pageSearch) ? +pageSearch[0] : +pageSearch;
+
+  const [selectedOffer, setSelectedOffer] = useState<string | null>(
+    offerId ?? null
+  );
+
+  const handleDialogClose = () => {
+    setSelectedOffer(null);
+    //remove offerId search param if it exists
+    if (offerId) {
+      console.log(offerId);
+      console.log(searchParams);
+      const current = new URLSearchParams(searchParams as any);
+      current.delete(`offerId`);
+      const search = current.toString();
+
+      const query = search ? `?${search}` : "";
+
+      router.push(`${pathname}${query}`);
+    }
+  };
 
   const {
     data: queryData,
@@ -91,7 +115,7 @@ const GoldOffers = ({
         <GoldOfferDialog
           isOpen={!!selectedOffer}
           offerId={selectedOffer}
-          handleClose={() => setSelectedOffer(null)}
+          handleClose={handleDialogClose}
         />
       )}
     </>

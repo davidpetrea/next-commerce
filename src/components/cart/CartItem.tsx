@@ -32,7 +32,9 @@ const CartItem = ({ item }: { item: UserCartItem }) => {
 
   const characterName = meta.character;
 
-  const productUrl = `/games/${item.product?.game?.path}/${item.product?.path}`;
+  const productUrl = `/games/${item.product?.game?.path}/${item.product?.path}${
+    item.gold_offer_id && `?offerId=${item.gold_offer_id}`
+  }`;
 
   const serverName = item.gold_offer_id ? item.offer?.server?.name : undefined;
 
@@ -53,8 +55,7 @@ const CartItem = ({ item }: { item: UserCartItem }) => {
 
   return (
     <div className="p-4 bg-zinc-800 rounded-md flex items-start gap-4">
-      {/* TODO: for gold offers, add query param to specific gold offer and open dialog */}
-      <Link href={productUrl} className="shrink-0">
+      <a href={productUrl} className="shrink-0">
         <Image
           src={item.product?.image_url!}
           width={69}
@@ -62,7 +63,7 @@ const CartItem = ({ item }: { item: UserCartItem }) => {
           className="rounded-lg"
           alt="Product image"
         />
-      </Link>
+      </a>
       <div className="w-full">
         {/* Name and price */}
         <div className="flex justify-between items-start gap-2">
