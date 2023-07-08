@@ -1,7 +1,7 @@
 "use client";
 import CustomAutocomplete, {
   AutocompleteHandle,
-} from "@components/common/Autocomplete";
+} from "@components/ui/Autocomplete";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect, useRef } from "react";
 

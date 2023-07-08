@@ -1,7 +1,8 @@
 import { ClockIcon, ProfileIcon, TrashIcon } from "@assets/SvgComponents";
+import { showErrorToast } from "@components/common/toasts/ErrorToast";
 import { useCartDispatch } from "@components/context/CartContext";
 import useRemoveUserCartItemMutation from "@components/mutations/useRemoveUserCartItemMutation";
-import { UserCartItem } from "@lib/supabase/client";
+import { CartItemMeta, UserCartItem } from "@lib/supabase/client";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -18,9 +19,18 @@ const CartItem = ({ item }: { item: UserCartItem }) => {
         onSuccess: () => {
           dispatch({ type: "remove", payload: item.cart_item_id });
         },
+        onError: (error) => {
+          if (error instanceof Error) {
+            showErrorToast(error.message);
+          }
+        },
       }
     );
   };
+
+  const meta = item.meta as CartItemMeta;
+
+  const characterName = meta.character;
 
   const productUrl = `/games/${item.product?.game?.path}/${item.product?.path}`;
 
@@ -35,6 +45,11 @@ const CartItem = ({ item }: { item: UserCartItem }) => {
   const tags = item.gold_offer_id
     ? [item.offer?.server?.region.toUpperCase(), item.offer?.faction, name]
     : [];
+
+  //If character name exists, push into tags
+  if (item.gold_offer_id && characterName) {
+    tags.push(characterName);
+  }
 
   return (
     <div className="p-4 bg-zinc-800 rounded-md flex items-start gap-4">

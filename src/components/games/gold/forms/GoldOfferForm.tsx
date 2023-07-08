@@ -1,10 +1,13 @@
 "use client";
-import TextField from "@components/common/TextField";
+import TextField from "@components/ui/TextField";
 import { useCartDispatch } from "@components/context/CartContext";
-import { OfferExtended, addItemToCartAuth } from "@lib/supabase";
+import useAddUserCartItemMutation from "@components/mutations/useAddUserCartItemMutation";
+import { OfferExtended } from "@lib/supabase";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { showSuccessToast } from "@components/common/toasts/SuccessToast";
+import { showErrorToast } from "@components/common/toasts/ErrorToast";
 
 interface FormValues {
   amount: string;
@@ -35,6 +38,8 @@ const GoldOfferForm = ({
     },
   });
 
+  const { mutate, isLoading } = useAddUserCartItemMutation();
+
   const amount = watch("amount");
 
   const totalPrice = ((+amount / +offer?.unit!) * +offer?.price!).toFixed(2);
@@ -46,29 +51,35 @@ const GoldOfferForm = ({
     if (auth.session) {
       //auth add to cart
 
-      //TODO: move this into mutation
-      try {
-        const response = await addItemToCartAuth({
+      mutate(
+        {
           userId: auth.session.user.id,
           productId: offer.product_id,
           offerId: offer.offer_id,
           sellerId: offer.user_id,
           quantity: +data.amount,
           price: +totalPrice,
-        });
-
-        if (response) {
-          //Add item to items[], close offer dialog and open cart
-          handleClose();
-          dispatch({ type: "add", payload: response[0] });
-          dispatch({ type: "openCart" });
+          meta: {
+            character: data.character ?? undefined,
+          },
+        },
+        {
+          onSuccess: (data) => {
+            //Add item to items[], close offer dialog and open cart
+            handleClose();
+            dispatch({ type: "add", payload: data[0] });
+            dispatch({ type: "openCart" });
+            showSuccessToast("Item added to cart!");
+          },
+          onError: (error) => {
+            if (error instanceof Error) {
+              showErrorToast(error.message);
+            }
+          },
         }
-        //add item to client state
-      } catch (err) {
-        console.log(err);
-      }
+      );
     } else {
-      //guest add to cart
+      //TODO:guest add to cart
       console.log("guest add to cart");
     }
   };

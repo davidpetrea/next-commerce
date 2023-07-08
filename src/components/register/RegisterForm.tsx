@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import TextField from "@components/common/TextField";
+import TextField from "@components/ui/TextField";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterSchema } from "@utils/schemas";
 import Link from "next/link";

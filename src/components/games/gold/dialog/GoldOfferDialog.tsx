@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
-import Dialog from "@components/common/Dialog";
-import DialogContainer from "@components/common/DialogContainer";
+import Dialog from "@components/ui/Dialog";
+import DialogContainer from "@components/ui/DialogContainer";
 import GoldOfferForm from "../forms/GoldOfferForm";
 import Details from "./Details";
 import Reviews from "./Reviews";

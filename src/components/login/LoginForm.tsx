@@ -6,7 +6,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { LoginSchema } from "@utils/schemas";
-import TextField from "@components/common/TextField";
+import TextField from "@components/ui/TextField";
 import { useRouter } from "next/navigation";
 
 interface FormValues {

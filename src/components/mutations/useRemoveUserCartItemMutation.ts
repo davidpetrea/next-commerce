@@ -1,4 +1,4 @@
-import { removeItemFromCartAuth } from "@lib/supabase";
+import { removeItemFromCartAuth } from "@lib/supabase/client";
 import { useMutation } from "@tanstack/react-query";
 
 const useRemoveUserCartItemMutation = () => {

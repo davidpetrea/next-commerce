@@ -1,11 +1,8 @@
-import '../globals.css';
-import { Inter } from 'next/font/google';
-
-const inter = Inter({ subsets: ['latin'] });
+import "../globals.css";
 
 export const metadata = {
-  title: 'Login into Next Commerce',
-  description: 'sign in into your account',
+  title: "Login into Next Commerce",
+  description: "sign in into your account",
 };
 
 export default function LoginLayout({
@@ -13,9 +10,5 @@ export default function LoginLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang='en'>
-      <body className={inter.className}>{children}</body>
-    </html>
-  );
+  return <main>{children}</main>;
 }

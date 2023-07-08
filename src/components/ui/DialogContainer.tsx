@@ -1,6 +1,6 @@
 "use client";
 import React, { Fragment } from "react";
-import Dialog from "@components/common/Dialog";
+import Dialog from "@components/ui/Dialog";
 import { XIcon } from "@assets/SvgComponents";
 import { Transition } from "@headlessui/react";
 

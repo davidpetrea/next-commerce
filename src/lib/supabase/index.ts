@@ -96,58 +96,7 @@ export async function getGoldOfferById({ offerId }: { offerId: string }) {
   return data;
 }
 
-export async function addItemToCartAuth({
-  userId,
-  productId,
-  offerId,
-  sellerId,
-  quantity,
-  price,
-  meta,
-}: {
-  userId: string;
-  productId?: string;
-  offerId?: string;
-  sellerId: string;
-  quantity?: number;
-  price: number;
-  meta?: {};
-}) {
-  const { data, error } = await supabase
-    .from("cart_items_auth")
-    .insert({
-      user_id: userId,
-      product_id: productId,
-      gold_offer_id: offerId,
-      seller_id: sellerId,
-      quantity: quantity,
-      total_price: price,
-      meta: JSON.stringify(meta),
-    })
-    .select(
-      `*,
-      product:products(id,name,game:games(id,path),image_url,path),
-      offer:gold_offers(offer_id, faction, server:servers(name,region)),
-      seller:users!seller_id(name)`
-    )
-    .returns<UserCartItem[]>();
 
-  if (!data || error) return;
-
-  return data;
-}
-
-//TODO: make sure only current user can remove/add items from cart
-export async function removeItemFromCartAuth({
-  cartItemId,
-}: {
-  cartItemId: string;
-}) {
-  await supabase
-    .from("cart_items_auth")
-    .delete()
-    .eq("cart_item_id", cartItemId);
-}
 //TODO: add item to cart guest, only able to add/remove to cart by sessionId
 
 //TODO:get reviews by user

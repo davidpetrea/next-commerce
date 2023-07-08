@@ -1,6 +1,6 @@
 "use client";
 
-import CustomPagination from "@components/common/Pagination";
+import CustomPagination from "@components/ui/Pagination";
 import { Game, getGoldOffers } from "@lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";

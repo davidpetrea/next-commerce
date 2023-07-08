@@ -1,5 +1,5 @@
 import { LoadingSpinner, PromoCodeIcon } from "@assets/SvgComponents";
-import TextField from "@components/common/TextField";
+import TextField from "@components/ui/TextField";
 import { useCartDispatch } from "@components/context/CartContext";
 import useValidatePromoCodeMutation from "@components/mutations/useValidatePromoCodeMutation";
 
